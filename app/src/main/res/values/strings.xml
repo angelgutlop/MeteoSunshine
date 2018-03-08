@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Sunshine</string>
+    <string name="recargar">RECARGAR</string>
+    <string name="mensaje_error">No se han podido cargar los datos. Inténtelo de nuevo pulsando sobre recargar</string>
+</resources>
