@@ -1,13 +1,17 @@
 package com.example.angel.sunshine;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.angel.sunshine.utilidades.ConexionForecast;
 import com.example.angel.sunshine.utilidades.OpenWeatherJSON;
@@ -19,11 +23,15 @@ import java.net.URL;
 import java.util.ArrayList;
 
 
-public class previsionTiempo_activity extends AppCompatActivity {
+public class previsionTiempo_activity extends AppCompatActivity implements RecyclerAdapter.OnClickListener {
 
-    TextView previsionTextView;
-    TextView errorMensajeTextView;
-    ProgressBar barraCargaDatosTiempo;
+
+    private RecyclerView rvTiempo;
+    private TextView errorMensajeTextView;
+    private ProgressBar barraCargaDatosTiempo;
+    private RecyclerAdapter recyclerAdapter;
+
+    private static Context context;
 
     private String TAG = previsionTiempo_activity.class.getSimpleName();
 
@@ -32,18 +40,39 @@ public class previsionTiempo_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        context = this;
 
-        previsionTextView = (TextView) findViewById(R.id.infoMeteo);
+        rvTiempo = findViewById(R.id.rv_infoMeteo);
         errorMensajeTextView = findViewById(R.id.tv_mensaje_error);
         barraCargaDatosTiempo = findViewById(R.id.bp_prograsoCarga);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
+        recyclerAdapter = new RecyclerAdapter();
+
+        recyclerAdapter.setListener(this);
+
+        rvTiempo.setLayoutManager(layoutManager);
+        rvTiempo.setAdapter(recyclerAdapter);
+        rvTiempo.setHasFixedSize(true);
 
         cargarDatosClima();
     }
 
 
+
     private void cargarDatosClima() {
 
         new ObtenerClima().execute(OpenWeatherJSON.getLocalizacionFavorita());
+    }
+
+    Toast toast = null;
+
+    @Override
+    public void onItemClick(int id) {
+        if (toast != null) toast.cancel();
+        toast = Toast.makeText(this, "Elemento " + id, Toast.LENGTH_SHORT);
+        toast.show();
     }
 
 
@@ -60,7 +89,7 @@ public class previsionTiempo_activity extends AppCompatActivity {
             try {
 
                 String datosJsonTiempo = ConexionForecast.getResponseFromHttpUrl(url);
-                return OpenWeatherJSON.tiempoSimpleString(getApplicationContext(), datosJsonTiempo);
+                return OpenWeatherJSON.tiempoSimpleString(context, datosJsonTiempo);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -76,9 +105,13 @@ public class previsionTiempo_activity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            previsionTextView.setText("");
+
             errorMensajeTextView.setVisibility(View.INVISIBLE);
             barraCargaDatosTiempo.setVisibility(View.VISIBLE);
+
+            recyclerAdapter = new RecyclerAdapter();
+            recyclerAdapter.setListener(previsionTiempo_activity.this);
+            rvTiempo.setAdapter(recyclerAdapter);
         }
 
         @Override
@@ -90,9 +123,9 @@ public class previsionTiempo_activity extends AppCompatActivity {
                 errorMensajeTextView.setVisibility(View.INVISIBLE);
                 barraCargaDatosTiempo.setVisibility(View.INVISIBLE);
 
-                for (String s : arrayTiempo) {
-                    previsionTextView.append(s + "\n\n");
-                }
+
+                recyclerAdapter.setForecastData(arrayTiempo);
+
             } else {
                 errorMensajeTextView.setVisibility(View.VISIBLE);
                 barraCargaDatosTiempo.setVisibility(View.INVISIBLE);
