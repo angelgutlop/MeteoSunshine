@@ -21,6 +21,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Previs
 
     private ArrayList<String> arrayTiempo = new ArrayList<>();
 
+    //Funciones para recuperar el contenido del array de tiempo
+
+    public String getElement(int id) {
+        if (arrayTiempo != null) {
+            return arrayTiempo.get(id);
+        }
+
+        return null;
+    }
+
+
     private OnClickListener onClickListener;
 
     public interface OnClickListener {

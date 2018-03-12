@@ -1,6 +1,7 @@
 package com.example.angel.sunshine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 
-public class previsionTiempo_activity extends AppCompatActivity implements RecyclerAdapter.OnClickListener {
+public class PrevisionTiempo_activity extends AppCompatActivity implements RecyclerAdapter.OnClickListener {
 
 
     private RecyclerView rvTiempo;
@@ -31,9 +32,9 @@ public class previsionTiempo_activity extends AppCompatActivity implements Recyc
     private ProgressBar barraCargaDatosTiempo;
     private RecyclerAdapter recyclerAdapter;
 
-    private static Context context;
+    private Context context;
 
-    private String TAG = previsionTiempo_activity.class.getSimpleName();
+    private String TAG = PrevisionTiempo_activity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +68,18 @@ public class previsionTiempo_activity extends AppCompatActivity implements Recyc
     }
 
     Toast toast = null;
+    //Esta subrutina maneja el evento de click sobre cualquiera de los elementos de la lista con el pronóstico del tiempo.
 
     @Override
     public void onItemClick(int id) {
+
         if (toast != null) toast.cancel();
+
+        Intent intent = new Intent(this, DetallesTiempo_Activity.class);
+        intent.putExtra(Intent.EXTRA_TEXT, recyclerAdapter.getElement(id));
+        startActivity(intent);
         toast = Toast.makeText(this, "Elemento " + id, Toast.LENGTH_SHORT);
+
         toast.show();
     }
 
@@ -110,7 +118,7 @@ public class previsionTiempo_activity extends AppCompatActivity implements Recyc
             barraCargaDatosTiempo.setVisibility(View.VISIBLE);
 
             recyclerAdapter = new RecyclerAdapter();
-            recyclerAdapter.setListener(previsionTiempo_activity.this);
+            recyclerAdapter.setListener(PrevisionTiempo_activity.this);
             rvTiempo.setAdapter(recyclerAdapter);
         }
 
