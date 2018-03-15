@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:defaultValue="@string/centigrados_value"
+        android:entries="@array/temperaturas_labels"
+        android:entryValues="@array/temperaturas_values"
+        android:key="@string/ajustes_seleccion_temperatura_key"
+        android:title="@string/ajustes_unidades_temperatura_titulo" />
+    <EditTextPreference
+        android:defaultValue="Default value"
+        android:key="@string/ajustes_localizacion_key"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/ajustes_localizacion_titulo" />
+</PreferenceScreen>

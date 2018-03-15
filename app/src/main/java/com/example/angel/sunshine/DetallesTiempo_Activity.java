@@ -38,7 +38,7 @@ public class DetallesTiempo_Activity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.accion_compartir: {
+            case R.id.accion_compartir_detalles: {
 
                 String texto = tvPrevision.getText().toString();
                 String mimeType = "text/Plain";
@@ -54,6 +54,12 @@ public class DetallesTiempo_Activity extends AppCompatActivity {
 
                 break;
             }
+            case R.id.accion_ajustes_detalles: {
+                Intent intentPreferencias = new Intent(this, Settings_Activity.class);
+                startActivity(intentPreferencias);
+                break;
+            }
+
         }
         return super.onOptionsItemSelected(item);
     }

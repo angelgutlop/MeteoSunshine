@@ -3,7 +3,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/recargar_forecast"
+        android:id="@+id/menu_recargar_forecast"
+        android:icon="@drawable/ic_autorenew_white_36dp"
+        android:orderInCategory="1"
         android:title="@string/recargar"
+        app:showAsAction="ifRoom" />
+
+
+    <item
+        android:id="@+id/menu_ajustes_forecast"
+        android:icon="@drawable/ic_settings_white_36dp"
+        android:orderInCategory="2"
+        android:title="@string/ajustes_texto"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_abrir_ubicacion"
+        android:icon="@drawable/ic_map_white_36dp"
+        android:orderInCategory="3"
+        android:title="@string/menu_mapa"
         app:showAsAction="ifRoom" />
 </menu>

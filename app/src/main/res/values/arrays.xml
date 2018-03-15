@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="temperaturas_labels">
+        <item>@string/centigrados_label</item>
+        <item>@string/farenheit_label</item>
+    </array>
+
+    <array name="temperaturas_values">
+        <item>@string/centigrados_value</item>
+        <item>@string/farenheit_value</item>
+    </array>
+
+
+</resources>

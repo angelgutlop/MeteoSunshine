@@ -48,12 +48,12 @@ public class ConexionForecast {
     final static String DAYS_PARAM = "cnt";
 
 
-    public static URL construyeUrl(String localizacion) {
+    public static URL construyeUrl(String localizacion, String unidadTemperatura) {
 
         Uri.Builder builder = Uri.parse(FORECAST_BASE_URL).buildUpon();
         builder.appendQueryParameter(QUERY_PARAM, localizacion);
         builder.appendQueryParameter(FORMAT_PARAM, format);
-        builder.appendQueryParameter(UNITS_PARAM, units);
+        builder.appendQueryParameter(UNITS_PARAM, unidadTemperatura);
         builder.appendQueryParameter(DAYS_PARAM, Integer.toString(numeroDias));
         builder.build();
 
