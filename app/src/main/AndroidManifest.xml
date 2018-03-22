@@ -20,6 +20,11 @@
         </activity>
         <activity android:name=".DetallesTiempo_Activity" />
         <activity android:name=".Settings_Activity"></activity>
+
+        <provider
+            android:authorities="com.example.angel.sunshine"
+            android:name="com.example.angel.sunshine.data.PronosticoContentProvider"
+            android:exported="false"></provider>
     </application>
 
 </manifest>

@@ -1,13 +1,13 @@
 package com.example.angel.sunshine;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
@@ -21,18 +21,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.angel.sunshine.utilidades.ConexionForecast;
-import com.example.angel.sunshine.utilidades.OpenWeatherJSON;
+import com.example.angel.sunshine.data.PronosticoContract;
 import com.example.angel.sunshine.utilidades.PreferenciasApp;
-
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
+import com.example.angel.sunshine.utilidades.UtilidadesFecha;
 
 
-public class PrevisionTiempo_activity extends AppCompatActivity implements RecyclerAdapter.OnClickListener, LoaderManager.LoaderCallbacks<String>, SharedPreferences.OnSharedPreferenceChangeListener {
+public class PrevisionTiempo_activity extends AppCompatActivity implements RecyclerAdapter.OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
 
 
     private RecyclerView rvTiempo;
@@ -65,14 +59,14 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
-        recyclerAdapter = new RecyclerAdapter();
+        recyclerAdapter = new RecyclerAdapter(this);
         recyclerAdapter.setListener(this);
 
         rvTiempo.setLayoutManager(layoutManager);
         rvTiempo.setAdapter(recyclerAdapter);
         rvTiempo.setHasFixedSize(true);
 
-
+//Todo--> cargar los datos de clima en la base de datos de forma periódica.
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
@@ -134,61 +128,79 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
 
     }
 
+    //region        REGION     ***************** Gestión loader. *********************************
+    //
     @Override
-    public Loader<String> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         if (args == null) return null;
 
 
-        //Manejador de AsyncTaskLoader personalizado
         ID_LOADERS idEnum = ID_LOADERS.values()[id];
 
 
         switch (idEnum) {
             case FETCH_WEATHER:
-                return asyncFetchClima(args);
+
+                Uri forecast_uri = PronosticoContract.PronosticoAcceso.CONTENT_URI;
+                String sortOrder = PronosticoContract.PronosticoAcceso.COLUMNA_FECHA + " ASC";
+
+                //La fecha se almacena en tiempo local
+
+
+                //comTODO USAR un cursor loader
+
+                String mSlection = PronosticoContract.PronosticoAcceso.COLUMNA_FECHA + " >=?";
+                String[] mSelectionArgs = new String[]{Long.toString(UtilidadesFecha.getCurrentLocalTimestamp())};
+
+
+                return new CursorLoader(this, forecast_uri, null, mSlection, mSelectionArgs, sortOrder);
+
 
             default:
                 return null;
 
         }
+
     }
 
+    private int mPosition = RecyclerView.NO_POSITION;
 
     @Override
-    public void onLoadFinished(Loader<String> loader, String datosJsonTiempo) {
-        //Una vez tarminada la consulta del clima a OW, esta rutina almancena los datos en el recicler adapter para su visualizacion y consulta
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        //Una vez terminada la consulta del clima a OW, esta rutina almancena los datos en el recicler adapter para su visualizacion y consulta
 
-        if (datosJsonTiempo == null) {
+        if (cursor == null) {
             configurarVistaError();
             return;
         }
+        if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+
+        rvTiempo.smoothScrollToPosition(mPosition);
 
 
-        try {
-            configurarVistaVerLista();
-            ArrayList<String> arrayTiempo = OpenWeatherJSON.tiempoSimpleString(context, datosJsonTiempo);
-            recyclerAdapter.setForecastData(arrayTiempo);
+        recyclerAdapter.updateForecastData(cursor);
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        if (cursor.getCount() > 0) configurarVistaVerLista();
     }
 
     @Override
-    public void onLoaderReset(Loader<String> loader) {
+    public void onLoaderReset(Loader<Cursor> loader) {
         getSupportLoaderManager().destroyLoader(ID_LOADERS.FETCH_WEATHER.ordinal());
+        recyclerAdapter.updateForecastData(null);
 
     }
+//endregion
 
 
+/*
     @SuppressLint("StaticFieldLeak")
-    private AsyncTaskLoader<String> asyncFetchClima(final Bundle args) {
+    private AsyncTaskLoader<Cursor> asyncFetchClima(final Bundle args) {
 
 
-        return new AsyncTaskLoader<String>(this) {
+        return new AsyncTaskLoader<Cursor>(this) {
 
-            String mData;
+            Cursor mData;
 
 
             @Override
@@ -200,7 +212,7 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
                 else {
 
                     //Reinicia la lista de clima cuando se lanza una nueva consulta
-                    recyclerAdapter = new RecyclerAdapter();
+                    recyclerAdapter = new RecyclerAdapter(PrevisionTiempo_activity.this);
                     recyclerAdapter.setListener(PrevisionTiempo_activity.this);
                     rvTiempo.setAdapter(recyclerAdapter);
 
@@ -212,7 +224,7 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
             }
 
             @Override
-            public String loadInBackground() {
+            public Cursor loadInBackground() {
 
                 String localizacion = args.getString(OW_LOCALIZACION_KEY);
                 String unidadTemperatura = args.getString(OW_UNIDAD_TEPERATURA_KEY);
@@ -229,7 +241,7 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
             }
 
             @Override
-            public void deliverResult(String data) {
+            public void deliverResult(Cursor data) {
                 mData = data;
                 super.deliverResult(data);
             }
@@ -238,19 +250,22 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
     }
 
 
-
+*/
 
 
     Toast toast = null;
     //Esta subrutina maneja el evento de click sobre cualquiera de los elementos de la lista con el pronóstico del tiempo.
+
 
     @Override
     public void onItemClick(int id) {
 
         if (toast != null) toast.cancel();
 
+
+        Uri uriDate = PronosticoContract.PronosticoAcceso.getUriWithDate(recyclerAdapter.getDate(id));
         Intent intent = new Intent(this, DetallesTiempo_Activity.class);
-        intent.putExtra(Intent.EXTRA_TEXT, recyclerAdapter.getElement(id));
+        intent.putExtra(Intent.EXTRA_TEXT, uriDate);
         startActivity(intent);
 
     }
@@ -311,7 +326,7 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
                 if (intent.resolveActivity(getPackageManager()) != null) {
                     startActivity(intent);
                 } else {
-                    Log.d(TAG, "Couldn't call " + geoLocation.toString() + ", no receiving apps installed!");
+                    Log.d(TAG, "No se puede mostrar la ubicacion " + geoLocation.toString() + ", ya que no hay una app de mapas instalada.");
                 }
             }
 

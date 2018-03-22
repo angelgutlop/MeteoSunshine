@@ -28,4 +28,6 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
     compile 'com.android.support:recyclerview-v7:26.1.0'
     compile 'com.android.support:preference-v7:26.1.0'
+
+    compile 'joda-time:joda-time:2.9.4'
 }

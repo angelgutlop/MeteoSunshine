@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,5 +13,69 @@
         android:padding="10dp"
         android:textSize="20sp" />
 
+    <TextView
+        android:id="@+id/tv_fecha_detalles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="fecha"
+        android:textSize="24sp" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tv_humedad_detalles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="humedad"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/tv_max_temp_detalles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="max temp"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/tv_min_temp_detalles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="min temp"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/tv_presion_detalles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="presion"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/tv_orientancion_viento_detalles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="orientacion viento"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/tv_velocidad_viento_detalles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="orientacion viento"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/tv_descripcion_detalles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Descripcion"
+        android:textSize="24sp" />
+
+
+</LinearLayout>

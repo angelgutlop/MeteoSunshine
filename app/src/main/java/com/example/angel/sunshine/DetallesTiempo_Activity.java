@@ -1,29 +1,78 @@
 package com.example.angel.sunshine;
 
+
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-public class DetallesTiempo_Activity extends AppCompatActivity {
+import com.example.angel.sunshine.data.PronosticoContract.PronosticoAcceso;
+import com.example.angel.sunshine.utilidades.UtilidadesFecha;
+import com.example.angel.sunshine.utilidades.UtilidadesTiempo;
+
+public class DetallesTiempo_Activity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
     TextView tvPrevision;
+
+    private enum ID_LOADERS {FETCH_WEATHER_ENTRY}
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalles_tiempo);
 
+
+        // tod
         tvPrevision = findViewById(R.id.tv_detalle_pronostico_tiempo);
 
+
+        Uri uriDate = null;
         Intent intent = getIntent();
         if (intent.hasExtra(Intent.EXTRA_TEXT)) {
-            String prevision = intent.getStringExtra(Intent.EXTRA_TEXT);
-            tvPrevision.setText(prevision);
+
+            uriDate = Uri.parse(intent.getStringExtra(Intent.EXTRA_TEXT));
+
         }
 
+        if (getSupportLoaderManager().getLoader(DetallesTiempo_Activity.ID_LOADERS.FETCH_WEATHER_ENTRY.ordinal()) != null) {
+            getSupportLoaderManager().initLoader(DetallesTiempo_Activity.ID_LOADERS.FETCH_WEATHER_ENTRY.ordinal(), null, this);
+
+        } else {
+            cargarEntradaClima(uriDate);
+        }
+
+    }
+
+    private static final String URI_ID = "uri_id";
+
+    private void cargarEntradaClima(Uri uri) {
+
+        LoaderManager loaderManager = getSupportLoaderManager();
+
+        //Añadir parámetros el id
+
+
+        Bundle queryBundle = new Bundle();
+
+        queryBundle.putString(URI_ID, uri.toString());
+
+        int loaderID = DetallesTiempo_Activity.ID_LOADERS.FETCH_WEATHER_ENTRY.ordinal();
+        Loader<Object> climaLoader = loaderManager.getLoader(loaderID);
+
+        if (climaLoader == null) {
+            loaderManager.initLoader(loaderID, queryBundle, this);
+        } else {
+            loaderManager.restartLoader(loaderID, queryBundle, this);
+        }
     }
 
     @Override
@@ -62,5 +111,92 @@ public class DetallesTiempo_Activity extends AppCompatActivity {
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    //region REGION  ****** GESTION DEL LOADER ********
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+
+        if (args == null) return null;
+
+        Uri foracast_uri;
+
+        if (args.containsKey(URI_ID)) {
+            foracast_uri = Uri.parse(args.getString(URI_ID));
+        } else {
+            throw new IllegalArgumentException("No se ha declarado el identificador del tiempo antes de acceder a la base de datos");
+        }
+
+
+        ID_LOADERS id_loader = ID_LOADERS.values()[id];
+
+
+        switch (id_loader) {
+            case FETCH_WEATHER_ENTRY: {
+
+                return new CursorLoader(this, foracast_uri, null, null, null, null);
+
+
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        //co rellenar una vez acabe el load del contenido y actualizar vistas
+        //co Añadir varis vistas para visualizar el texto de forma adecuada
+        //todo Recabar informacion de los ids para que no se carguen cada vez que se abra la actividad
+
+
+        int idColumnaFecha = data.getColumnIndex(PronosticoAcceso.COLUMNA_FECHA);
+
+        int idColumnaVelViento = data.getColumnIndex(PronosticoAcceso.COLUMNA_VELOCIDAD_VIENTO);
+        int idColumnaOrientacionViento = data.getColumnIndex(PronosticoAcceso.COLUMNA_ORIENTACION_VIENTO);
+
+        int idColumnaTemperatura_max = data.getColumnIndex(PronosticoAcceso.COLUMNA_MAX_TEMP);
+        int idColumnaTemperatura_min = data.getColumnIndex(PronosticoAcceso.COLUMNA_MIN_TEMP);
+
+        int idColumnaPresion = data.getColumnIndex(PronosticoAcceso.COLUMNA_PRESION);
+        int idColumnaHumedad = data.getColumnIndex(PronosticoAcceso.COLUMNA_HUMEDAD);
+
+
+        int id_weather_String = data.getColumnIndex(PronosticoAcceso.COLUMNA_WEATHER_ID);
+
+        String descripcion = UtilidadesTiempo.getWeatherIdString(this, data.getInt(id_weather_String));
+
+        TextView tvFecha = findViewById(R.id.tv_fecha_detalles);
+        TextView tvVelViento = findViewById(R.id.tv_velocidad_viento_detalles);
+        TextView tvOrViento = findViewById(R.id.tv_orientancion_viento_detalles);
+        TextView tvTempMax = findViewById(R.id.tv_max_temp_detalles);
+        TextView tvTempMin = findViewById(R.id.tv_min_temp_detalles);
+        TextView tvPresion = findViewById(R.id.tv_presion_detalles);
+        TextView tvHumedad = findViewById(R.id.tv_humedad_detalles);
+        TextView tvDescricion = findViewById(R.id.tv_descripcion_detalles);
+
+        //comp convertir esta fecha a numeros leibles por el usuario
+        long fecha = data.getLong(idColumnaFecha);
+        tvFecha.setText(UtilidadesFecha.timestamp2String(fecha));
+
+        tvVelViento.setText(Long.toString(data.getLong(idColumnaVelViento)));
+        tvOrViento.setText(Long.toString(data.getLong(idColumnaOrientacionViento)));
+
+        tvTempMax.setText(Long.toString(data.getLong(idColumnaTemperatura_max)));
+
+        tvTempMin.setText(Long.toString(data.getLong(idColumnaTemperatura_min)));
+
+        tvPresion.setText(Long.toString(data.getLong(idColumnaPresion)));
+
+        tvHumedad.setText(Long.toString(data.getLong(idColumnaHumedad)));
+
+        tvDescricion.setText(descripcion);
+
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 }
