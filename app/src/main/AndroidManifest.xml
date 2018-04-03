@@ -18,8 +18,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetallesTiempo_Activity" />
+        <activity
+            android:name=".DetallesTiempo_Activity"
+            android:parentActivityName=".PrevisionTiempo_activity"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".PrevisionTiempo_activity" />
+        </activity>
         <activity android:name=".Settings_Activity"></activity>
+
+        <service
+            android:name=".sync.ForecastSyncService"
+            android:exported="false"></service>
+
+        <service
+            android:name=".sync.FirebaseJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+        </service>
 
         <provider
             android:authorities="com.example.angel.sunshine"

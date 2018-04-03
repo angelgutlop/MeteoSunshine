@@ -60,7 +60,7 @@ public class UtilidadesFecha {
     }
 
 
-    // todo Usar esta funcion para convertir las fechas UTC de OW a local con el fin de alamcenarlas en la base de datos SQL
+    // c Usar esta funcion para convertir las fechas UTC de OW a local con el fin de alamcenarlas en la base de datos SQL
 
     public static long convertUTC2LocalTimeZone(long utctimestamp) {
 
@@ -92,6 +92,18 @@ public class UtilidadesFecha {
         dia = dia.substring(0, 1).toUpperCase() + dia.substring(1).toLowerCase();
 
         return dia;
+    }
+
+    public static long getStartOfDayTimestamp() {
+
+        DateTime dateInicioDia = DateTime.now().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0);
+        Long milis = dateInicioDia.getMillis();
+        Long seconds = TimeUnit.MILLISECONDS.toSeconds(milis);
+        Timestamp timestamp = new Timestamp(seconds);
+
+        return timestamp.getTime();
+
+
     }
 
 }

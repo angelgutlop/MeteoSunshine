@@ -3,9 +3,11 @@ package com.example.angel.sunshine;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -22,29 +24,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.angel.sunshine.data.PronosticoContract;
+import com.example.angel.sunshine.sync.ForecastSyncUtilis;
 import com.example.angel.sunshine.utilidades.PreferenciasApp;
 import com.example.angel.sunshine.utilidades.UtilidadesFecha;
 
 
-public class PrevisionTiempo_activity extends AppCompatActivity implements RecyclerAdapter.OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
+public class PrevisionTiempo_activity extends AppCompatActivity implements RecyclerAdapter.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
 
     private RecyclerView rvTiempo;
     private TextView errorMensajeTextView;
     private ProgressBar barraCargaDatosTiempo;
     private RecyclerAdapter recyclerAdapter;
-
+    private SQLObserver mContentObserver = new SQLObserver(new Handler());
 
     private enum ID_LOADERS {FETCH_WEATHER}
-
 
 
     private Context context;
 
     private String TAG = PrevisionTiempo_activity.class.getSimpleName();
 
-    private String OW_LOCALIZACION_KEY = "ow_localizacion_key";
-    private String OW_UNIDAD_TEPERATURA_KEY = "ow_unidad_temperatura";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,32 +66,34 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
         rvTiempo.setAdapter(recyclerAdapter);
         rvTiempo.setHasFixedSize(true);
 
-//Todo--> cargar los datos de clima en la base de datos de forma periódica.
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+//c--> cargar los datos de clima en la base de datos de forma periódica.
 
-        if (getSupportLoaderManager().getLoader(ID_LOADERS.FETCH_WEATHER.ordinal()) != null) {
-            getSupportLoaderManager().initLoader(ID_LOADERS.FETCH_WEATHER.ordinal(), null, this);
+        ForecastSyncUtilis.sincronizarInmediatamente(this);
 
-        } else {
-            cargarDatosClima();
-        }
+        Uri uriClima = PronosticoContract.PronosticoAcceso.CONTENT_URI;
 
+        // getContentResolver().registerContentObserver(uriClima, false, mContentObserver);
+
+        // getSupportLoaderManager().initLoader(ID_LOADERS.FETCH_WEATHER.ordinal(), null, this);
+
+
+        cargarDatosSQL();
+
+        ForecastSyncUtilis.inicializarSync(context);
+        //todo cargar de alguna forma los datos de la base de datos SQL en el reciler
+
+
+    }
+
+    private void cargarDatosSQL() {
+        getSupportLoaderManager().initLoader(ID_LOADERS.FETCH_WEATHER.ordinal(), null, this);
 
     }
 
     @Override
     protected void onDestroy() {
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
+        //     getContentResolver().unregisterContentObserver(mContentObserver);
         super.onDestroy();
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        cargarDatosClima();
     }
 
 
@@ -102,38 +104,10 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
     }
 
 
-    private void cargarDatosClima() {
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String localizacion = sharedPreferences.getString(getString(R.string.ajustes_localizacion_key), PreferenciasApp.getUbicacionPreferida());
-
-        String unidadTemperatura = sharedPreferences.getString((getString(R.string.ajustes_seleccion_temperatura_key)), PreferenciasApp.getUnidadTemperaturaPreferida());
-
-        Bundle queryBundle = new Bundle();
-        queryBundle.putString(OW_LOCALIZACION_KEY, localizacion);
-        queryBundle.putString(OW_UNIDAD_TEPERATURA_KEY, unidadTemperatura);
-
-        LoaderManager loaderManager = getSupportLoaderManager();
-
-
-        int loaderID = ID_LOADERS.FETCH_WEATHER.ordinal();
-        Loader<Object> climaLoader = loaderManager.getLoader(loaderID);
-
-        if (climaLoader == null) {
-            loaderManager.initLoader(loaderID, queryBundle, this);
-        } else {
-            loaderManager.restartLoader(loaderID, queryBundle, this);
-        }
-
-
-    }
-
     //region        REGION     ***************** Gestión loader. *********************************
     //
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-        if (args == null) return null;
 
 
         ID_LOADERS idEnum = ID_LOADERS.values()[id];
@@ -142,11 +116,10 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
         switch (idEnum) {
             case FETCH_WEATHER:
 
+                configurarVistaEsperando();
+
                 Uri forecast_uri = PronosticoContract.PronosticoAcceso.CONTENT_URI;
-                String sortOrder = PronosticoContract.PronosticoAcceso.COLUMNA_FECHA + " ASC";
-
-                //La fecha se almacena en tiempo local
-
+                String sortOrder = PronosticoContract.PronosticoAcceso.COLUMNA_FECHA + " ASC"; //La fecha se almacena en tiempo local
 
                 //comTODO USAR un cursor loader
 
@@ -193,66 +166,6 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
 //endregion
 
 
-/*
-    @SuppressLint("StaticFieldLeak")
-    private AsyncTaskLoader<Cursor> asyncFetchClima(final Bundle args) {
-
-
-        return new AsyncTaskLoader<Cursor>(this) {
-
-            Cursor mData;
-
-
-            @Override
-            protected void onStartLoading() {
-
-                super.onStartLoading();
-
-                if (mData != null) deliverResult(mData);
-                else {
-
-                    //Reinicia la lista de clima cuando se lanza una nueva consulta
-                    recyclerAdapter = new RecyclerAdapter(PrevisionTiempo_activity.this);
-                    recyclerAdapter.setListener(PrevisionTiempo_activity.this);
-                    rvTiempo.setAdapter(recyclerAdapter);
-
-                    //Muesta la barra de progreso
-                    configurarVistaEsperando();
-
-                    forceLoad();
-                }
-            }
-
-            @Override
-            public Cursor loadInBackground() {
-
-                String localizacion = args.getString(OW_LOCALIZACION_KEY);
-                String unidadTemperatura = args.getString(OW_UNIDAD_TEPERATURA_KEY);
-
-                URL url = ConexionForecast.construyeUrl(localizacion, unidadTemperatura);
-
-                try {
-                    return ConexionForecast.getResponseFromHttpUrl(url);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-
-            @Override
-            public void deliverResult(Cursor data) {
-                mData = data;
-                super.deliverResult(data);
-            }
-
-        };
-    }
-
-
-*/
-
-
     Toast toast = null;
     //Esta subrutina maneja el evento de click sobre cualquiera de los elementos de la lista con el pronóstico del tiempo.
 
@@ -265,7 +178,7 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
 
         Uri uriDate = PronosticoContract.PronosticoAcceso.getUriWithDate(recyclerAdapter.getDate(id));
         Intent intent = new Intent(this, DetallesTiempo_Activity.class);
-        intent.putExtra(Intent.EXTRA_TEXT, uriDate);
+        intent.putExtra(Intent.EXTRA_TEXT, uriDate.toString());
         startActivity(intent);
 
     }
@@ -288,7 +201,6 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -306,7 +218,7 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
         switch (item.getItemId()) {
 
             case R.id.menu_recargar_forecast: {
-                cargarDatosClima();
+                getSupportLoaderManager().initLoader(ID_LOADERS.FETCH_WEATHER.ordinal(), null, this);
                 break;
             }
             case R.id.menu_ajustes_forecast: {
@@ -333,5 +245,25 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //Todo comprobar que este observer cumple su funcion, que no es otra que cargar datos de la base de datos cuando esta informacion se actualiza
+    class SQLObserver extends ContentObserver {
+        public SQLObserver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            cargarDatosSQL();
+            this.onChange(selfChange, null);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            // do s.th.
+            // depending on the handler you might be on the UI
+            // thread, so be cautious!
+        }
     }
 }

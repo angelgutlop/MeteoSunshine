@@ -1,7 +1,6 @@
 package com.example.angel.sunshine.data;
 
 import android.content.ContentProvider;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -78,11 +77,9 @@ public class PronosticoContentProvider extends ContentProvider {
         return null;
     }
 
-    @Nullable
     @Override
-    public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-
-        SQLiteDatabase db = pronosticoDBAux.getWritableDatabase();
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
+        final SQLiteDatabase db = pronosticoDBAux.getWritableDatabase();
 
         int match = uriMatcher.match(uri);
 
@@ -90,19 +87,39 @@ public class PronosticoContentProvider extends ContentProvider {
 
             case WEATHER_TABLE: {
 
-                long nRegistros = db.insert(PronosticoContract.PronosticoAcceso.NOMBRE_TABLA, null, values);
+                db.beginTransaction();
+
+
+                int nRegistros = 0;
+
+                try {
+                    for (ContentValues contentValue : values) {
+                        long id = db.insert(PronosticoContract.PronosticoAcceso.NOMBRE_TABLA, null, contentValue);
+                        if (id > 1) nRegistros++;
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
 
                 if (nRegistros > 0) {
-                    return ContentUris.withAppendedId(uri, nRegistros);
-                } else {
-                    throw new SQLException("Error accediendo a la base de datos: " + uri);
+                    getContext().getContentResolver().notifyChange(uri, null);
                 }
+
+                return nRegistros;
             }
 
             default: {
                 throw new UnsupportedOperationException("Opcion de consulta de clima no soportada: " + uri);
             }
         }
+    }
+
+
+    @Nullable
+    @Override
+    public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
+        throw new UnsupportedOperationException("Opción de insertar no soportada. Usa bulkInsert en su lugar ");
     }
 
     @Override

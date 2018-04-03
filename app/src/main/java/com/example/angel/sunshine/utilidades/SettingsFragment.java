@@ -1,5 +1,6 @@
 package com.example.angel.sunshine.utilidades;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.preference.EditTextPreference;
@@ -8,6 +9,8 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 
 import com.example.angel.sunshine.R;
+import com.example.angel.sunshine.data.PronosticoContract;
+import com.example.angel.sunshine.sync.ForecastSyncUtilis;
 
 /**
  * Created by Angel on 15/03/2018.
@@ -38,9 +41,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
+        Activity activity = getActivity();
         if (key.equals(getString(R.string.ajustes_localizacion_key))) {
+            ForecastSyncUtilis.sincronizarInmediatamente(activity);
+
             setEditTextSummary(key);
         } else if (key.equals(getString(R.string.ajustes_seleccion_temperatura_key))) {
+            activity.getContentResolver().notifyChange(PronosticoContract.PronosticoAcceso.CONTENT_URI, null);
             setListPreferenceSummary(key);
         }
     }

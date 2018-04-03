@@ -79,5 +79,10 @@
     <string name="menu_mapa">Mapa</string>
     <string name="condition_unknown">Tiempo desconocido</string>
 
+    <!-- Texto notificacion -->
+    <string name="tituloNotificacion">Pronóstico tiempo</string>
+    <string name="ajustes_mostrar_notificaciones_key">ajustes_mostrar_notificaciones_key</string>
+    <string name="ajustes_mostrar_notificaciones_titulo">Mostrar notificaciones</string>
+
 
 </resources>

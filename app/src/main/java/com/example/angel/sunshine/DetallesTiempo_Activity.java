@@ -6,7 +6,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +32,8 @@ public class DetallesTiempo_Activity extends AppCompatActivity implements Loader
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalles_tiempo);
 
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
 
         // tod
         tvPrevision = findViewById(R.id.tv_detalle_pronostico_tiempo);
@@ -108,6 +112,27 @@ public class DetallesTiempo_Activity extends AppCompatActivity implements Loader
                 startActivity(intentPreferencias);
                 break;
             }
+            case android.R.id.home: {
+                //  NavUtils.navigateUpFromSameTask(this);
+
+                Intent upIntent = NavUtils.getParentActivityIntent(this);
+             /*   if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                    // This activity is NOT part of this app's task, so create a new task
+                    // when navigating up, with a synthesized back stack.*/
+                TaskStackBuilder.create(this)
+                        // Add all of this activity's parents to the back stack
+                        .addNextIntentWithParentStack(upIntent)
+                        // Navigate up to the closest parent
+                        .startActivities();
+                /*} else {
+                    // This activity is part of this app's task, so simply
+                    // navigate up to the logical parent activity.
+                    NavUtils.navigateUpTo(this, upIntent);
+                }*/
+                return true;
+
+            }
+
 
         }
         return super.onOptionsItemSelected(item);
@@ -149,7 +174,7 @@ public class DetallesTiempo_Activity extends AppCompatActivity implements Loader
         //co Añadir varis vistas para visualizar el texto de forma adecuada
         //todo Recabar informacion de los ids para que no se carguen cada vez que se abra la actividad
 
-
+        data.moveToFirst();
         int idColumnaFecha = data.getColumnIndex(PronosticoAcceso.COLUMNA_FECHA);
 
         int idColumnaVelViento = data.getColumnIndex(PronosticoAcceso.COLUMNA_VELOCIDAD_VIENTO);
