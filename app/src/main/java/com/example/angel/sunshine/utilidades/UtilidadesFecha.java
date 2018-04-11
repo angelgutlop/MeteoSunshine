@@ -23,7 +23,7 @@ public class UtilidadesFecha {
 
         Date dt = new Date(timestamp_milis);
 
-        SimpleDateFormat sfd = new SimpleDateFormat("E MMMM yyyy", new Locale("es", "ES"));
+        SimpleDateFormat sfd = new SimpleDateFormat("E d MMMM", new Locale("es", "ES"));
 
         String fecha = sfd.format(dt);
 
@@ -103,7 +103,17 @@ public class UtilidadesFecha {
 
         return timestamp.getTime();
 
-
     }
 
+
+    public static long getEndOfDayTimestamp() {
+
+        DateTime dateInicioDia = DateTime.now().withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59);
+        Long milis = dateInicioDia.getMillis();
+        Long seconds = TimeUnit.MILLISECONDS.toSeconds(milis);
+        Timestamp timestamp = new Timestamp(seconds);
+
+        return timestamp.getTime();
+
+    }
 }

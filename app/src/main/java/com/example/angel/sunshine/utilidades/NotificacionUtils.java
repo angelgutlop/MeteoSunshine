@@ -74,8 +74,8 @@ public class NotificacionUtils {
             int idIconoSmall = UtilidadesTiempo.getIDIconoVectorClimaLargo(weatherId);
             Bitmap largeIcon = BitmapFactory.decodeResource(resources, idIconoLarge);
 
-            String maxTempStr = UtilidadesTiempo.daFormatoATemperatura(context, max_temp);
-            String minTempStr = UtilidadesTiempo.daFormatoATemperatura(context, min_temp);
+            String maxTempStr = UtilidadesTiempo.daFormatoATemperatura(context, (long) max_temp);
+            String minTempStr = UtilidadesTiempo.daFormatoATemperatura(context, (long) min_temp);
 
             String textoNotificacion = "Prevision: " + descripcion + ". Min: " + maxTempStr + " - Max: " + minTempStr;
             String tituloNotficacion = resources.getString(R.string.tituloNotificacion);

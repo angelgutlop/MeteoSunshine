@@ -263,7 +263,7 @@ public class UtilidadesTiempo {
         return R.drawable.art_storm;
     }
 
-    public static String daFormatoATemperatura(Context context, double temp) {
+    public static String daFormatoATemperatura(Context context, long temp) {
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -281,8 +281,8 @@ public class UtilidadesTiempo {
             notacionTemperatura = "ºF";
         }
 
-        String tempDecimales = String.format("%.2f", temp);
-        String tempFormat = tempDecimales + " " + notacionTemperatura;
+
+        String tempFormat = temp + " " + notacionTemperatura;
 
         return tempFormat;
     }

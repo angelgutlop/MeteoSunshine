@@ -1,5 +1,10 @@
 package com.example.angel.sunshine.data;
 
+import android.content.Context;
+
+import com.example.angel.sunshine.utilidades.UtilidadesFecha;
+import com.example.angel.sunshine.utilidades.UtilidadesTiempo;
+
 public class DatosClima {
 
     public Long timestamp;
@@ -22,4 +27,26 @@ public class DatosClima {
         this.viento = viento;
         this.orientacionViento = orientacionViento;
     }
+
+    public String getFecha() {
+        return UtilidadesFecha.timestamp2String(this.timestamp);
+    }
+
+    public String getDescipcion(Context context) {
+        return UtilidadesTiempo.getWeatherIdString(context, this.prevision_id);
+    }
+
+    public String getMaxTempStr(Context context) {
+        return Math.round(this.maxTemp) + "º";
+    }
+
+    public String getMinTempStr(Context context) {
+        return Math.round(this.minTemp) + "º";
+    }
+
+    public int getIconoClima() {
+        return UtilidadesTiempo.getIDIconoVectorClimaLargo(this.prevision_id);
+    }
+
+
 }

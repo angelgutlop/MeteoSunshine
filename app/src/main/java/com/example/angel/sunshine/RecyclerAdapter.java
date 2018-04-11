@@ -7,8 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.angel.sunshine.data.DatosClima;
 import com.example.angel.sunshine.data.PronosticoContract;
 import com.example.angel.sunshine.utilidades.UtilidadesFecha;
 import com.example.angel.sunshine.utilidades.UtilidadesTiempo;
@@ -78,7 +80,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Previs
         Context context = parent.getContext();
         LayoutInflater layoutInflater = LayoutInflater.from(context);
 
-        View view = layoutInflater.inflate(R.layout.forecast_item_list, parent, false);
+        int idLayout = 0;
+        switch (viewType) {
+            case VISTA_HOY:
+                idLayout = R.layout.forecast_item_hoy;
+                break;
+
+            case VISTA_FUTURA:
+                idLayout = R.layout.forecast_item_list;
+                break;
+
+        }
+        View view = layoutInflater.inflate(idLayout, parent, false);
         return new PrevisionItemHolder(view);
 
 
@@ -109,12 +122,27 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Previs
 
         //Guarda en el tag del holder el id del resgistro correspondiente para recuperar la informacion de forma sencilla cuando se produzca el evento OnClick sobre la lista
 
-        holder.itemView.setTag(ind_weater_id);
+        //holder.itemView.setTag(ind_weater_id);
+
+        DatosClima datosClima = new DatosClima(date, weatherId, max_temp, min_temp, null, null, null, null);
 
         String resumen = fecha + " - " + descripcion + " - " + min_temp + " a " + max_temp;
 
-        holder.bind(resumen);
+        holder.bind(datosClima);
         Log.d(TAG, "Elemento " + position + " mostrado");
+
+    }
+
+    private static final int VISTA_HOY = 1;
+    private static final int VISTA_FUTURA = 2;
+
+    @Override
+    public int getItemViewType(int position) {
+        long tsIni = UtilidadesFecha.getStartOfDayTimestamp();
+        long tsFin = UtilidadesFecha.getEndOfDayTimestamp();
+        long date = this.getDate(position);
+        if (date > tsIni && date < tsFin) return VISTA_HOY;
+        else return VISTA_FUTURA;
 
     }
 
@@ -128,18 +156,33 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Previs
 
     class PrevisionItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView mWeatherTextView;
+        private ImageView iconoClima;
+        private TextView diaPronostico;
+        private TextView descripcionClima;
+        private TextView temperaturaMáxima;
+        private TextView temperaturaMínima;
 
         PrevisionItemHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            mWeatherTextView = itemView.findViewById(R.id.tv_informacion_meteo);
+            iconoClima = itemView.findViewById(R.id.ivIconoClima);
+            diaPronostico = itemView.findViewById(R.id.tvDiaPronostico);
+            descripcionClima = itemView.findViewById(R.id.tvDescripcionPronóstico);
+            temperaturaMáxima = itemView.findViewById(R.id.tvTemperaturaMáxima);
+            temperaturaMínima = itemView.findViewById(R.id.tvTemperatuaMínima);
+
 
         }
 
-        public void bind(String texto) {
+        public void bind(DatosClima prevision) {
 
-            mWeatherTextView.setText(texto);
+
+            diaPronostico.setText(prevision.getFecha());
+            descripcionClima.setText(prevision.getDescipcion(mContext));
+            temperaturaMáxima.setText(prevision.getMaxTempStr(mContext));
+            temperaturaMínima.setText(prevision.getMinTempStr(mContext));
+            iconoClima.setImageResource(prevision.getIconoClima());
+
         }
 
         @Override
