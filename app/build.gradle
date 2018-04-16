@@ -10,6 +10,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+
     }
     buildTypes {
         release {
@@ -17,6 +18,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding.enabled = true
+
 }
 
 dependencies {
@@ -29,8 +32,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'com.android.support:preference-v7:26.1.0'
-
     implementation 'joda-time:joda-time:2.9.4'
-
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
 }

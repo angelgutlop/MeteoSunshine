@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DetallesTiempo_Activity"
+            android:name=".DetallesActivity"
             android:parentActivityName=".PrevisionTiempo_activity"
             android:launchMode="singleTop">
             <meta-data

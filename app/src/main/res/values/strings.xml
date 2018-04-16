@@ -19,6 +19,7 @@
 
     <string name="DATE_ID">DATE_id</string>
 
+
     <!-- Weather Conditions (From OpenWeatherMap) -->
     <string name="condition_2xx">Tormenta</string>
     <string name="condition_3xx">Llovizna</string>
@@ -83,6 +84,9 @@
     <string name="tituloNotificacion">Pronóstico tiempo</string>
     <string name="ajustes_mostrar_notificaciones_key">ajustes_mostrar_notificaciones_key</string>
     <string name="ajustes_mostrar_notificaciones_titulo">Mostrar notificaciones</string>
+    <string name="HumedadString">Humedad</string>
+    <string name="PresionString">Presión</string>
+    <string name="VientoString">Viento</string>
 
 
 </resources>

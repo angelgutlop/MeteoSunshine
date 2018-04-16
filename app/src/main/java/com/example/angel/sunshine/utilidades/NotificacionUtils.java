@@ -15,7 +15,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
-import com.example.angel.sunshine.DetallesTiempo_Activity;
+import com.example.angel.sunshine.DetallesActivity;
 import com.example.angel.sunshine.R;
 import com.example.angel.sunshine.data.PronosticoContract;
 
@@ -91,7 +91,7 @@ public class NotificacionUtils {
 
 
             Uri uriTiempoHoy = PronosticoContract.PronosticoAcceso.getUriWithDate(fecha);
-            Intent actividadDetalles = new Intent(context, DetallesTiempo_Activity.class);
+            Intent actividadDetalles = new Intent(context, DetallesActivity.class);
             actividadDetalles.putExtra(Intent.EXTRA_TEXT, uriTiempoHoy.toString());
 
             TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);

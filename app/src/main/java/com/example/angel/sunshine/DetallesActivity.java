@@ -3,6 +3,7 @@ package com.example.angel.sunshine;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -14,15 +15,19 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.example.angel.sunshine.data.PronosticoContract.PronosticoAcceso;
+import com.example.angel.sunshine.databinding.ActivitdadDetallesBinding;
 import com.example.angel.sunshine.utilidades.UtilidadesFecha;
 import com.example.angel.sunshine.utilidades.UtilidadesTiempo;
 
-public class DetallesTiempo_Activity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class DetallesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    TextView tvPrevision;
+    //TextView tvPrevision;
+    //Deta mainBinding;
+    //Activity mainBinding;
+
+    private ActivitdadDetallesBinding mdetallesBinding;
 
     private enum ID_LOADERS {FETCH_WEATHER_ENTRY}
 
@@ -30,13 +35,15 @@ public class DetallesTiempo_Activity extends AppCompatActivity implements Loader
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detalles_tiempo);
+
+
+        mdetallesBinding = DataBindingUtil.setContentView(this, R.layout.activitdad_detalles);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
 
         // tod
-        tvPrevision = findViewById(R.id.tv_detalle_pronostico_tiempo);
+        //       tvPrevision = findViewById(R.id.tv_detalle_pronostico_tiempo);
 
 
         Uri uriDate = null;
@@ -47,12 +54,13 @@ public class DetallesTiempo_Activity extends AppCompatActivity implements Loader
 
         }
 
-        if (getSupportLoaderManager().getLoader(DetallesTiempo_Activity.ID_LOADERS.FETCH_WEATHER_ENTRY.ordinal()) != null) {
-            getSupportLoaderManager().initLoader(DetallesTiempo_Activity.ID_LOADERS.FETCH_WEATHER_ENTRY.ordinal(), null, this);
+        if (getSupportLoaderManager().getLoader(DetallesActivity.ID_LOADERS.FETCH_WEATHER_ENTRY.ordinal()) != null) {
+            getSupportLoaderManager().initLoader(DetallesActivity.ID_LOADERS.FETCH_WEATHER_ENTRY.ordinal(), null, this);
 
         } else {
             cargarEntradaClima(uriDate);
         }
+
 
     }
 
@@ -69,7 +77,7 @@ public class DetallesTiempo_Activity extends AppCompatActivity implements Loader
 
         queryBundle.putString(URI_ID, uri.toString());
 
-        int loaderID = DetallesTiempo_Activity.ID_LOADERS.FETCH_WEATHER_ENTRY.ordinal();
+        int loaderID = DetallesActivity.ID_LOADERS.FETCH_WEATHER_ENTRY.ordinal();
         Loader<Object> climaLoader = loaderManager.getLoader(loaderID);
 
         if (climaLoader == null) {
@@ -93,11 +101,11 @@ public class DetallesTiempo_Activity extends AppCompatActivity implements Loader
         switch (id) {
             case R.id.accion_compartir_detalles: {
 
-                String texto = tvPrevision.getText().toString();
+                // todo String texto = tvPrevision.getText().toString();
                 String mimeType = "text/Plain";
                 ShareCompat.IntentBuilder shareIntent = ShareCompat.IntentBuilder.from(this);
                 shareIntent.setChooserTitle("Compartir mediante");
-                shareIntent.setType(mimeType).setText(texto);
+                // todo shareIntent.setType(mimeType).setText(texto);
 
                 Intent intent = shareIntent.getIntent();
 
@@ -187,35 +195,28 @@ public class DetallesTiempo_Activity extends AppCompatActivity implements Loader
         int idColumnaHumedad = data.getColumnIndex(PronosticoAcceso.COLUMNA_HUMEDAD);
 
 
-        int id_weather_String = data.getColumnIndex(PronosticoAcceso.COLUMNA_WEATHER_ID);
+        int idWheaterId = data.getColumnIndex(PronosticoAcceso.COLUMNA_WEATHER_ID);
 
-        String descripcion = UtilidadesTiempo.getWeatherIdString(this, data.getInt(id_weather_String));
-
-        TextView tvFecha = findViewById(R.id.tv_fecha_detalles);
-        TextView tvVelViento = findViewById(R.id.tv_velocidad_viento_detalles);
-        TextView tvOrViento = findViewById(R.id.tv_orientancion_viento_detalles);
-        TextView tvTempMax = findViewById(R.id.tv_max_temp_detalles);
-        TextView tvTempMin = findViewById(R.id.tv_min_temp_detalles);
-        TextView tvPresion = findViewById(R.id.tv_presion_detalles);
-        TextView tvHumedad = findViewById(R.id.tv_humedad_detalles);
-        TextView tvDescricion = findViewById(R.id.tv_descripcion_detalles);
-
-        //comp convertir esta fecha a numeros leibles por el usuario
         long fecha = data.getLong(idColumnaFecha);
-        tvFecha.setText(UtilidadesFecha.timestamp2String(fecha));
+        int weatherId = data.getInt(idWheaterId);
 
-        tvVelViento.setText(Long.toString(data.getLong(idColumnaVelViento)));
-        tvOrViento.setText(Long.toString(data.getLong(idColumnaOrientacionViento)));
 
-        tvTempMax.setText(Long.toString(data.getLong(idColumnaTemperatura_max)));
+        Long velocidadViento = data.getLong(idColumnaVelViento);
+        Long orientacionViento = data.getLong(idColumnaOrientacionViento);
 
-        tvTempMin.setText(Long.toString(data.getLong(idColumnaTemperatura_min)));
 
-        tvPresion.setText(Long.toString(data.getLong(idColumnaPresion)));
+        String vientoStr = UtilidadesTiempo.getFormattedWind(this, velocidadViento, orientacionViento);
 
-        tvHumedad.setText(Long.toString(data.getLong(idColumnaHumedad)));
+        mdetallesBinding.detallesPrincipal.iconoClima.setImageResource(UtilidadesTiempo.getIDIconoVectorClimaLargo((weatherId)));
+        mdetallesBinding.detallesPrincipal.tvFechaDetalles.setText(UtilidadesFecha.timestamp2String(fecha));
+        mdetallesBinding.detallesPrincipal.tvDescripcionDetalles.setText(UtilidadesTiempo.getWeatherIdString(this, weatherId));
+        mdetallesBinding.detallesPrincipal.tvMaxTempDetalles.setText(Long.toString(data.getLong(idColumnaTemperatura_max)) + "º");
+        mdetallesBinding.detallesPrincipal.tvMinTempDetalles.setText(Long.toString(data.getLong(idColumnaTemperatura_min)) + "º");
 
-        tvDescricion.setText(descripcion);
+        mdetallesBinding.detallesExtra.tvHumedadDetalles.setText(Long.toString(data.getLong(idColumnaHumedad)) + "%");
+
+        mdetallesBinding.detallesExtra.tvPresionDetalles.setText(Long.toString(data.getLong(idColumnaPresion)) + " hPa");
+        mdetallesBinding.detallesExtra.tvVientoDetalles.setText(vientoStr);
 
 
     }

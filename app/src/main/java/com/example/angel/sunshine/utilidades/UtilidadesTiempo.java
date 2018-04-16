@@ -15,6 +15,32 @@ public class UtilidadesTiempo {
 
     private static final String LOG_TAG = UtilidadesTiempo.class.getSimpleName();
 
+
+    public static String getFormattedWind(Context context, float velocidadViento, float grados) {
+
+
+        String direccion = "Unknown";
+        if (grados >= 337.5 || grados < 22.5) {
+            direccion = "N";
+        } else if (grados >= 22.5 && grados < 67.5) {
+            direccion = "NE";
+        } else if (grados >= 67.5 && grados < 112.5) {
+            direccion = "E";
+        } else if (grados >= 112.5 && grados < 157.5) {
+            direccion = "SE";
+        } else if (grados >= 157.5 && grados < 202.5) {
+            direccion = "S";
+        } else if (grados >= 202.5 && grados < 247.5) {
+            direccion = "SW";
+        } else if (grados >= 247.5 && grados < 292.5) {
+            direccion = "W";
+        } else if (grados >= 292.5 && grados < 337.5) {
+            direccion = "NW";
+        }
+
+        return String.format("%4.1f Km/h %s", velocidadViento, direccion);
+    }
+
     public static String getWeatherIdString(Context context, int weatherId) {
         int stringId;
         if (weatherId >= 200 && weatherId <= 232) {

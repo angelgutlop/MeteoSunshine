@@ -3,7 +3,6 @@ package com.example.angel.sunshine;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,7 +128,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Previs
         String resumen = fecha + " - " + descripcion + " - " + min_temp + " a " + max_temp;
 
         holder.bind(datosClima);
-        Log.d(TAG, "Elemento " + position + " mostrado");
+        // Log.d(TAG, "Elemento " + position + " mostrado");
 
     }
 

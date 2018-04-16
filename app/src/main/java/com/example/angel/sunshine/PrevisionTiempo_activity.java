@@ -177,7 +177,7 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
 
 
         Uri uriDate = PronosticoContract.PronosticoAcceso.getUriWithDate(recyclerAdapter.getDate(id));
-        Intent intent = new Intent(this, DetallesTiempo_Activity.class);
+        Intent intent = new Intent(this, DetallesActivity.class);
         intent.putExtra(Intent.EXTRA_TEXT, uriDate.toString());
         startActivity(intent);
 
