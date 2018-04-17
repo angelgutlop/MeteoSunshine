@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PrevisionTiempo_activity">
+        <activity android:name=".PrevisionTiempo_activity" android:theme="@style/AppTheme.Forecast"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,12 +22,13 @@
         <activity
             android:name=".DetallesActivity"
             android:parentActivityName=".PrevisionTiempo_activity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.Forecast">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".PrevisionTiempo_activity" />
         </activity>
-        <activity android:name=".Settings_Activity"></activity>
+        <activity android:name=".settings.Settings_Activity"></activity>
 
         <service
             android:name=".sync.ForecastSyncService"

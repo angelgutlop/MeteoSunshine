@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/detallesExtra"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/detail_accent_pane_background"
+        android:padding="20dp">
 
         <TextView
             android:id="@+id/tvHumedad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
             android:text="@string/HumedadString"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/secondary_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,21 +24,23 @@
             android:id="@+id/tvPresion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:text="@string/PresionString"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/secondary_text"
+            app:layout_constraintBottom_toTopOf="@+id/tvViento"
             app:layout_constraintStart_toStartOf="@+id/tvHumedad"
             app:layout_constraintTop_toBottomOf="@+id/tvHumedad" />
 
         <TextView
             android:id="@+id/tvViento"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginTop="16dp"
+            android:layout_height="wrap_content"
+
             android:text="@string/VientoString"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            app:layout_constraintStart_toStartOf="@+id/tvPresion"
-            app:layout_constraintTop_toBottomOf="@+id/tvPresion" />
+            android:textColor="@color/secondary_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tvPresion" />
 
         <TextView
             android:id="@+id/tv_viento_detalles"
@@ -45,6 +49,7 @@
             android:layout_marginTop="8dp"
             android:padding="10dp"
             android:text="velocidad  viento"
+            android:textColor="@color/white"
             android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@+id/tvViento"
             app:layout_constraintEnd_toEndOf="@+id/tv_presion_detalles"
@@ -58,6 +63,7 @@
             android:layout_marginRight="32dp"
             android:padding="10dp"
             android:text="humedad"
+            android:textColor="@color/white"
             android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@+id/tvHumedad"
             app:layout_constraintEnd_toEndOf="parent"
@@ -69,6 +75,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="presion"
+            android:textColor="@color/white"
             android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@+id/tvPresion"
             app:layout_constraintEnd_toEndOf="@+id/tv_humedad_detalles"

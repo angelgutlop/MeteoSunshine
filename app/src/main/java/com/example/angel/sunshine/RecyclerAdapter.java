@@ -137,10 +137,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Previs
 
     @Override
     public int getItemViewType(int position) {
+
+        /*
         long tsIni = UtilidadesFecha.getStartOfDayTimestamp();
         long tsFin = UtilidadesFecha.getEndOfDayTimestamp();
         long date = this.getDate(position);
         if (date > tsIni && date < tsFin) return VISTA_HOY;
+        else return VISTA_FUTURA;*/
+
+        if(position==0) return VISTA_HOY;
         else return VISTA_FUTURA;
 
     }

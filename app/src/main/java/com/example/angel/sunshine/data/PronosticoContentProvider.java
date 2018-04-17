@@ -45,6 +45,7 @@ public class PronosticoContentProvider extends ContentProvider {
 
                 cursor = db.query(PronosticoContract.PronosticoAcceso.NOMBRE_TABLA, null, selection, selectionArgs, null, null, sortOrder);
 
+
                 if (cursor == null) throw new SQLException("Base de datos de clima vacía");
                 break;
             }

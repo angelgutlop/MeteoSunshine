@@ -7,7 +7,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingTop="0dp"
-    tools:layout_editor_absoluteY="81dp">
+    tools:layout_editor_absoluteY="81dp"
+    android:background="@drawable/touch_selector_hoy">
 
     <TextView
         android:id="@+id/tvDescripcionPronóstico"
@@ -22,7 +23,8 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintEnd_toEndOf="@+id/ivIconoClima"
         app:layout_constraintStart_toStartOf="@+id/ivIconoClima"
-        app:layout_constraintTop_toBottomOf="@+id/ivIconoClima" />
+        app:layout_constraintTop_toBottomOf="@+id/ivIconoClima"
+        android:textColor="@color/white"/>
 
     <ImageView
         android:id="@+id/ivIconoClima"
@@ -45,7 +47,8 @@
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/white"/>
 
     <TextView
         android:id="@+id/tvTemperaturaMáxima"
@@ -54,7 +57,8 @@
         android:text="25º"
         android:textAppearance="@style/TextAppearance.AppCompat.Display3"
         app:layout_constraintBottom_toBottomOf="@+id/ivIconoClima"
-        app:layout_constraintStart_toStartOf="@+id/tvTemperatuaMínima" />
+        app:layout_constraintStart_toStartOf="@+id/tvTemperatuaMínima"
+        android:textColor="@color/white"/>
 
     <TextView
         android:id="@+id/tvTemperatuaMínima"
@@ -69,7 +73,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintStart_toEndOf="@+id/ivIconoClima"
-        app:layout_constraintTop_toTopOf="@+id/ivIconoClima" />
+        app:layout_constraintTop_toTopOf="@+id/ivIconoClima"
+        android:textColor="@color/white"/>
 
     <View
         android:layout_width="match_parent"

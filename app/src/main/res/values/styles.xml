@@ -6,9 +6,19 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
 
+    </style>
+
+
+    <style name="ActionBar">
+        <item name="logo">@drawable/ic_logo</item>
+        <item name="displayOptions">useLogo|showHome</item>
+        <item name="background">@color/colorPrimary</item>
+    </style>
+
+    <style name="AppTheme.Forecast" parent="@style/AppTheme">
+        <item name="actionBarStyle">@style/ActionBar</item>
     </style>
 
 </resources>

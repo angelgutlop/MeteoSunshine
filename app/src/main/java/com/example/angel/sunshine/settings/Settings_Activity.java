@@ -1,9 +1,11 @@
-package com.example.angel.sunshine;
+package com.example.angel.sunshine.settings;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import com.example.angel.sunshine.R;
 
 public class Settings_Activity extends AppCompatActivity {
 

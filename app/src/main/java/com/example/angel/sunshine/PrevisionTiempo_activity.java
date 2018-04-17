@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.angel.sunshine.data.PronosticoContract;
+import com.example.angel.sunshine.settings.Settings_Activity;
 import com.example.angel.sunshine.sync.ForecastSyncUtilis;
 import com.example.angel.sunshine.utilidades.PreferenciasApp;
 import com.example.angel.sunshine.utilidades.UtilidadesFecha;
@@ -36,12 +37,11 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
     private TextView errorMensajeTextView;
     private ProgressBar barraCargaDatosTiempo;
     private RecyclerAdapter recyclerAdapter;
-    private SQLObserver mContentObserver = new SQLObserver(new Handler());
 
     private enum ID_LOADERS {FETCH_WEATHER}
 
 
-    private Context context;
+    public static Context context;
 
     private String TAG = PrevisionTiempo_activity.class.getSimpleName();
 
@@ -75,12 +75,11 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
         // getContentResolver().registerContentObserver(uriClima, false, mContentObserver);
 
         // getSupportLoaderManager().initLoader(ID_LOADERS.FETCH_WEATHER.ordinal(), null, this);
-
+//configurarVistaEsperando();
 
         cargarDatosSQL();
-
-        ForecastSyncUtilis.inicializarSync(context);
-        //todo cargar de alguna forma los datos de la base de datos SQL en el reciler
+//Todo eliminar este comentario
+        //ForecastSyncUtilis.inicializarSync(context);
 
 
     }
@@ -94,6 +93,13 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
     protected void onDestroy() {
         //     getContentResolver().unregisterContentObserver(mContentObserver);
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+
     }
 
 
@@ -116,15 +122,15 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
         switch (idEnum) {
             case FETCH_WEATHER:
 
-                configurarVistaEsperando();
+               // configurarVistaEsperando();
 
                 Uri forecast_uri = PronosticoContract.PronosticoAcceso.CONTENT_URI;
                 String sortOrder = PronosticoContract.PronosticoAcceso.COLUMNA_FECHA + " ASC"; //La fecha se almacena en tiempo local
 
                 //comTODO USAR un cursor loader
 
-                String mSlection = PronosticoContract.PronosticoAcceso.COLUMNA_FECHA + " >=?";
-                String[] mSelectionArgs = new String[]{Long.toString(UtilidadesFecha.getCurrentLocalTimestamp())};
+                String mSlection =  PronosticoContract.PronosticoAcceso.COLUMNA_FECHA + " >=?";
+                String[] mSelectionArgs = new String[]{Long.toString(UtilidadesFecha.getStartOfDayTimestamp())};
 
 
                 return new CursorLoader(this, forecast_uri, null, mSlection, mSelectionArgs, sortOrder);
@@ -245,25 +251,5 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    //Todo comprobar que este observer cumple su funcion, que no es otra que cargar datos de la base de datos cuando esta informacion se actualiza
-    class SQLObserver extends ContentObserver {
-        public SQLObserver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            cargarDatosSQL();
-            this.onChange(selfChange, null);
-        }
-
-        @Override
-        public void onChange(boolean selfChange, Uri uri) {
-            // do s.th.
-            // depending on the handler you might be on the UI
-            // thread, so be cautious!
-        }
     }
 }

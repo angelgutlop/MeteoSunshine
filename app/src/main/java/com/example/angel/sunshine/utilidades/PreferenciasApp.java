@@ -1,5 +1,10 @@
 package com.example.angel.sunshine.utilidades;
 
+import android.content.Context;
+
+import com.example.angel.sunshine.PrevisionTiempo_activity;
+import com.example.angel.sunshine.R;
+
 /**
  * Created by Angel on 15/03/2018.
  */
@@ -7,15 +12,19 @@ package com.example.angel.sunshine.utilidades;
 public class PreferenciasApp {
 
     private static String UNIDAD_TEMPERATURA_PREFERIDA = "Celsius";
-    private static String UBICACION_PREFERIDA = "Peñascastillo, ES";
+    //private static String UBICACION_PREFERIDA ="Peñacastillo, ES";
 
     public static String getUbicacionPreferida() {
-        return UBICACION_PREFERIDA;
+        Context context= PrevisionTiempo_activity.context;
+       return context.getResources().getString(R.string.localizacion_preferida);
+
     }
 
 
     public static String getUnidadTemperaturaPreferida() {
-        return UNIDAD_TEMPERATURA_PREFERIDA;
+        Context context= PrevisionTiempo_activity.context;
+        return context.getResources().getString(R.string.centigrados_value);
+
     }
 
 

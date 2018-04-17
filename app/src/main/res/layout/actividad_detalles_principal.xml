@@ -39,13 +39,15 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:padding="0dp"
             android:text="max"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textSize="48sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iconoClima"
-            app:layout_constraintTop_toTopOf="@+id/iconoClima" />
+            app:layout_constraintTop_toTopOf="@+id/iconoClima"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/tv_min_temp_detalles"

@@ -18,6 +18,7 @@ import android.view.MenuItem;
 
 import com.example.angel.sunshine.data.PronosticoContract.PronosticoAcceso;
 import com.example.angel.sunshine.databinding.ActivitdadDetallesBinding;
+import com.example.angel.sunshine.settings.Settings_Activity;
 import com.example.angel.sunshine.utilidades.UtilidadesFecha;
 import com.example.angel.sunshine.utilidades.UtilidadesTiempo;
 

@@ -5,7 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="0dp">
+    android:paddingLeft="@dimen/forecast_detail_vertical_padding"
+    android:paddingRight="@dimen/forecast_detail_vertical_padding"
+    android:paddingTop="@dimen/list_item_padding_vertical"
+    android:background="@drawable/touch_selector">
 
     <TextView
         android:id="@+id/tvDescripcionPronóstico"
@@ -19,23 +22,23 @@
 
     <ImageView
         android:id="@+id/ivIconoClima"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="@dimen/list_icon"
+        android:layout_height="@dimen/list_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/art_clear" />
 
     <TextView
         android:id="@+id/tvDiaPronostico"
-        android:layout_width="wrap_content"
+        android:layout_width="145dp"
         android:layout_height="wrap_content"
 
-        android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="@dimen/list_item_icon_margin_right"
+        android:layout_marginTop="12dp"
         android:text="12 de Diciembre"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
+
         app:layout_constraintStart_toEndOf="@+id/ivIconoClima"
         app:layout_constraintTop_toTopOf="@+id/ivIconoClima" />
 
@@ -43,27 +46,28 @@
         android:id="@+id/tvTemperaturaMáxima"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="@dimen/list_item_high_temperature_margin"
+        android:layout_marginRight="@dimen/list_item_high_temperature_margin"
         android:text="25º"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tvTemperatuaMínima"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+
+        android:textColor="@color/primary_text"/>
 
     <TextView
         android:id="@+id/tvTemperatuaMínima"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="8dp"
         android:text="12º"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/secondary_text"/>
 
     <View
         android:layout_width="match_parent"

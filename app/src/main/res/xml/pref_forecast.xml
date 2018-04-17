@@ -7,7 +7,7 @@
         android:key="@string/ajustes_seleccion_temperatura_key"
         android:title="@string/ajustes_unidades_temperatura_titulo" />
     <EditTextPreference
-        android:defaultValue="Default value"
+        android:defaultValue="@string/localizacion_preferida"
         android:key="@string/ajustes_localizacion_key"
         android:selectAllOnFocus="true"
         android:singleLine="true"

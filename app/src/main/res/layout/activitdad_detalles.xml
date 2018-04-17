@@ -10,14 +10,14 @@
             android:id="@+id/detallesPrincipal"
             layout="@layout/actividad_detalles_principal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp" />
 
         <include
             android:id="@+id/detallesExtra"
             layout="@layout/actividad_detalles_informacion_extra"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp" />
+            android:layout_height="match_parent" />
     </LinearLayout>
 
 </layout>

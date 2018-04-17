@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sunshine</string>
+    <string name="app_name">Meteo Forecast</string>
     <string name="recargar">RECARGAR</string>
     <string name="mensaje_error">No se han podido cargar los datos. Inténtelo de nuevo pulsando sobre recargar</string>
     <string name="ajustes_texto">Ajustes</string>
@@ -87,6 +87,7 @@
     <string name="HumedadString">Humedad</string>
     <string name="PresionString">Presión</string>
     <string name="VientoString">Viento</string>
+    <string name="localizacion_preferida">Peñacastillo, Es</string>
 
 
 </resources>
