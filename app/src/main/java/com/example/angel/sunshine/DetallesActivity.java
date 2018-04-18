@@ -41,10 +41,13 @@ public class DetallesActivity extends AppCompatActivity implements LoaderManager
         mdetallesBinding = DataBindingUtil.setContentView(this, R.layout.activitdad_detalles);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
+        try {
+            actionBar.setHomeButtonEnabled(true);
+        } catch (NullPointerException npe) {
 
-        // tod
-        //       tvPrevision = findViewById(R.id.tv_detalle_pronostico_tiempo);
+        }
+
+
 
 
         Uri uriDate = null;
@@ -53,13 +56,13 @@ public class DetallesActivity extends AppCompatActivity implements LoaderManager
 
             uriDate = Uri.parse(intent.getStringExtra(Intent.EXTRA_TEXT));
 
-        }
 
-        if (getSupportLoaderManager().getLoader(DetallesActivity.ID_LOADERS.FETCH_WEATHER_ENTRY.ordinal()) != null) {
-            getSupportLoaderManager().initLoader(DetallesActivity.ID_LOADERS.FETCH_WEATHER_ENTRY.ordinal(), null, this);
+            if (getSupportLoaderManager().getLoader(DetallesActivity.ID_LOADERS.FETCH_WEATHER_ENTRY.ordinal()) != null) {
+                getSupportLoaderManager().initLoader(DetallesActivity.ID_LOADERS.FETCH_WEATHER_ENTRY.ordinal(), null, this);
 
-        } else {
-            cargarEntradaClima(uriDate);
+            } else {
+                cargarEntradaClima(uriDate);
+            }
         }
 
 
@@ -102,11 +105,11 @@ public class DetallesActivity extends AppCompatActivity implements LoaderManager
         switch (id) {
             case R.id.accion_compartir_detalles: {
 
-                // todo String texto = tvPrevision.getText().toString();
+                // c String texto = tvPrevision.getText().toString();
                 String mimeType = "text/Plain";
                 ShareCompat.IntentBuilder shareIntent = ShareCompat.IntentBuilder.from(this);
                 shareIntent.setChooserTitle("Compartir mediante");
-                // todo shareIntent.setType(mimeType).setText(texto);
+                // c shareIntent.setType(mimeType).setText(texto);
 
                 Intent intent = shareIntent.getIntent();
 
@@ -181,7 +184,7 @@ public class DetallesActivity extends AppCompatActivity implements LoaderManager
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         //co rellenar una vez acabe el load del contenido y actualizar vistas
         //co Añadir varis vistas para visualizar el texto de forma adecuada
-        //todo Recabar informacion de los ids para que no se carguen cada vez que se abra la actividad
+
 
         data.moveToFirst();
         int idColumnaFecha = data.getColumnIndex(PronosticoAcceso.COLUMNA_FECHA);
@@ -211,12 +214,17 @@ public class DetallesActivity extends AppCompatActivity implements LoaderManager
         mdetallesBinding.detallesPrincipal.iconoClima.setImageResource(UtilidadesTiempo.getIDIconoVectorClimaLargo((weatherId)));
         mdetallesBinding.detallesPrincipal.tvFechaDetalles.setText(UtilidadesFecha.timestamp2String(fecha));
         mdetallesBinding.detallesPrincipal.tvDescripcionDetalles.setText(UtilidadesTiempo.getWeatherIdString(this, weatherId));
-        mdetallesBinding.detallesPrincipal.tvMaxTempDetalles.setText(Long.toString(data.getLong(idColumnaTemperatura_max)) + "º");
-        mdetallesBinding.detallesPrincipal.tvMinTempDetalles.setText(Long.toString(data.getLong(idColumnaTemperatura_min)) + "º");
 
-        mdetallesBinding.detallesExtra.tvHumedadDetalles.setText(Long.toString(data.getLong(idColumnaHumedad)) + "%");
+        String maxtempStr = Long.toString(data.getLong(idColumnaTemperatura_max)) + "º";
+        String mintempStr = Long.toString(data.getLong(idColumnaTemperatura_min)) + "º";
+        String humedadStr = Long.toString(data.getLong(idColumnaHumedad)) + "%";
+        String presionStr = Long.toString(data.getLong(idColumnaPresion)) + " hPa";
 
-        mdetallesBinding.detallesExtra.tvPresionDetalles.setText(Long.toString(data.getLong(idColumnaPresion)) + " hPa");
+        mdetallesBinding.detallesPrincipal.tvMaxTempDetalles.setText(maxtempStr);
+        mdetallesBinding.detallesPrincipal.tvMinTempDetalles.setText(mintempStr);
+        mdetallesBinding.detallesExtra.tvHumedadDetalles.setText(humedadStr);
+
+        mdetallesBinding.detallesExtra.tvPresionDetalles.setText(presionStr);
         mdetallesBinding.detallesExtra.tvVientoDetalles.setText(vientoStr);
 
 

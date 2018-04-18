@@ -47,26 +47,32 @@ public class OpenWeatherJSON {
 
     public static ArrayList<String> tiempoSimpleString(Context context, String JSONInformacionTiempo) throws JSONException {
 
-        ArrayList<String> datosTiempoString = new ArrayList<String>();
+        ArrayList<String> datosTiempoString = new ArrayList<>();
 
         ArrayList<DatosClima> datosClima = obtenerDatosClimaIntervalo(JSONInformacionTiempo);
 
-        Iterator<DatosClima> iterator = datosClima.iterator();
-
-        while (iterator.hasNext()) {
-
-            DatosClima datosclimaDia = iterator.next();
+        try {
+            Iterator<DatosClima> iterator = datosClima.iterator();
 
 
-            String descripcionClima = UtilidadesTiempo.getWeatherIdString(context, datosclimaDia.prevision_id);
+            while (iterator.hasNext()) {
 
-            String fechaStr = UtilidadesFecha.timestamp2String(datosclimaDia.timestamp);
-            String infoTiempo = fechaStr + " " + descripcionClima + " Min: " + datosclimaDia.minTemp + " Max: " + datosclimaDia.maxTemp;
+                DatosClima datosclimaDia = iterator.next();
 
-            datosTiempoString.add(infoTiempo);
+
+                String descripcionClima = UtilidadesTiempo.getWeatherIdString(context, datosclimaDia.prevision_id);
+
+                String fechaStr = UtilidadesFecha.timestamp2String(datosclimaDia.timestamp);
+                String infoTiempo = fechaStr + " " + descripcionClima + " Min: " + datosclimaDia.minTemp + " Max: " + datosclimaDia.maxTemp;
+
+                datosTiempoString.add(infoTiempo);
+            }
+
+            return datosTiempoString;
+
+        } catch (NullPointerException npe) {
+            return null;
         }
-
-        return datosTiempoString;
     }
 
 
@@ -113,7 +119,7 @@ public class OpenWeatherJSON {
         JSONObject climaDia = jsonObject.getJSONArray(INFORMACION_CLIMA_OWM).getJSONObject(0);
 
         //c pasar timestamp a local.
-        //todo verificar que la conversion de timestamp es correcta
+        //c verificar que la conversion de timestamp es correcta
 
         Long timestamp = jsonObject.getLong(TIMESTAMP);
 

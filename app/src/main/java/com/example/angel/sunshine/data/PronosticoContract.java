@@ -36,8 +36,8 @@ public class PronosticoContract {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PRONOSTICO_PATH).build();
 
 
-        public static final Uri getUriWithDate(long date) {
-// todo verificar que esta uri es la correcta
+        public static Uri getUriWithDate(long date) {
+
 
             return CONTENT_URI.buildUpon().appendPath(Long.toString(date)).build();
 

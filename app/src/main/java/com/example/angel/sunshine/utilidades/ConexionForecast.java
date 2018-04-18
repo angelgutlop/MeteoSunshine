@@ -19,8 +19,6 @@ import okhttp3.Response;
 public class ConexionForecast {
 
 
-
-
     private static final String TAG = ConexionForecast.class.getSimpleName();
 
     private static final String DYNAMIC_WEATHER_URL =
@@ -40,12 +38,12 @@ public class ConexionForecast {
     /* The number of days we want our API to return */
     private static final int numeroDias = 14;
 
-    final static String QUERY_PARAM = "q";
-    final static String LAT_PARAM = "lat";
-    final static String LON_PARAM = "lon";
-    final static String FORMAT_PARAM = "mode";
-    final static String UNITS_PARAM = "units";
-    final static String DAYS_PARAM = "cnt";
+    private final static String QUERY_PARAM = "q";
+    private final static String LAT_PARAM = "lat";
+    private final static String LON_PARAM = "lon";
+    private final static String FORMAT_PARAM = "mode";
+    private final static String UNITS_PARAM = "units";
+    private final static String DAYS_PARAM = "cnt";
 
 
     public static URL construyeUrl(String localizacion, String unidadTemperatura) {
@@ -59,7 +57,7 @@ public class ConexionForecast {
 
         try {
             URL url = new URL(builder.toString());
-            Log.v(TAG,"URL creada: " + url);
+            Log.v(TAG, "URL creada: " + url);
             return url;
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -71,7 +69,6 @@ public class ConexionForecast {
 
     public static String getResponseFromHttpUrl(URL url) throws IOException {
 
-
         OkHttpClient client = new OkHttpClient();
 
 
@@ -81,25 +78,8 @@ public class ConexionForecast {
 
         Response response = client.newCall(request).execute();
         return response.body().string();
-
-/*
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        try {
-            InputStream in = urlConnection.getInputStream();
-
-            Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");
-
-            boolean hasInput = scanner.hasNext();
-            if (hasInput) {
-                return scanner.next();
-            } else {
-                return null;
-            }
-        } finally {
-            urlConnection.disconnect();
-        }*/
     }
 
 }
+
 

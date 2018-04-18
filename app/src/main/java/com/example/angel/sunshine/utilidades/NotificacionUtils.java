@@ -19,14 +19,31 @@ import com.example.angel.sunshine.DetallesActivity;
 import com.example.angel.sunshine.R;
 import com.example.angel.sunshine.data.PronosticoContract;
 
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+
 import static com.example.angel.sunshine.utilidades.UtilidadesFecha.getStartOfDayTimestamp;
 
 public class NotificacionUtils {
 
     private static final int NOTIFICACION_TIEMPO_ID = 100;
+    private static final int HOURS_BETWEEN_NOTIFICATIONS = 5;
+
+    private static DateTime timeLastNotification = null;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public static void notificarTiempoActual(Context context) {
+
+        DateTime dtNow = DateTime.now();
+
+        if (timeLastNotification == null) {
+            timeLastNotification = dtNow;
+            return;
+        }
+
+        Period diff = new Period(timeLastNotification, dtNow);
+
+        if (diff.getHours() < HOURS_BETWEEN_NOTIFICATIONS) return;
 
         Resources resources = context.getResources();
         ContentResolver resolver = context.getContentResolver();
@@ -107,6 +124,7 @@ public class NotificacionUtils {
 
             notificationManager.notify(NOTIFICACION_TIEMPO_ID, mBuilder.build());
 
+            timeLastNotification = dtNow;
         }
 
     }

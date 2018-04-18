@@ -58,7 +58,6 @@ public class ForecastSyncTask {
                 contentResolver.delete(uri, null, null);
                 int insertados = contentResolver.bulkInsert(uri, values);
 
-                //todo actualizar reciclerview o notificar cambios de alguna manera --> Revisar content observer en main
 
 
                 String mostrarNotificacionesKey = context.getResources().getString(R.string.ajustes_mostrar_notificaciones_key);

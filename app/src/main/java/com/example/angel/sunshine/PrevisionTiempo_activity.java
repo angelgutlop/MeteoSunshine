@@ -3,11 +3,10 @@ package com.example.angel.sunshine;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.ContentObserver;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -48,6 +47,7 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -66,20 +66,11 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
         rvTiempo.setAdapter(recyclerAdapter);
         rvTiempo.setHasFixedSize(true);
 
-//c--> cargar los datos de clima en la base de datos de forma periódica.
 
         ForecastSyncUtilis.sincronizarInmediatamente(this);
 
-        Uri uriClima = PronosticoContract.PronosticoAcceso.CONTENT_URI;
-
-        // getContentResolver().registerContentObserver(uriClima, false, mContentObserver);
-
-        // getSupportLoaderManager().initLoader(ID_LOADERS.FETCH_WEATHER.ordinal(), null, this);
-//configurarVistaEsperando();
-
         cargarDatosSQL();
-//Todo eliminar este comentario
-        //ForecastSyncUtilis.inicializarSync(context);
+        ForecastSyncUtilis.inicializarSync(context);
 
 
     }
@@ -122,14 +113,14 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
         switch (idEnum) {
             case FETCH_WEATHER:
 
-               // configurarVistaEsperando();
+                // configurarVistaEsperando();
 
                 Uri forecast_uri = PronosticoContract.PronosticoAcceso.CONTENT_URI;
                 String sortOrder = PronosticoContract.PronosticoAcceso.COLUMNA_FECHA + " ASC"; //La fecha se almacena en tiempo local
 
                 //comTODO USAR un cursor loader
 
-                String mSlection =  PronosticoContract.PronosticoAcceso.COLUMNA_FECHA + " >=?";
+                String mSlection = PronosticoContract.PronosticoAcceso.COLUMNA_FECHA + " >=?";
                 String[] mSelectionArgs = new String[]{Long.toString(UtilidadesFecha.getStartOfDayTimestamp())};
 
 
@@ -147,6 +138,7 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
         //Una vez terminada la consulta del clima a OW, esta rutina almancena los datos en el recicler adapter para su visualizacion y consulta
 
         if (cursor == null) {
@@ -223,10 +215,6 @@ public class PrevisionTiempo_activity extends AppCompatActivity implements Recyc
 
         switch (item.getItemId()) {
 
-            case R.id.menu_recargar_forecast: {
-                getSupportLoaderManager().initLoader(ID_LOADERS.FETCH_WEATHER.ordinal(), null, this);
-                break;
-            }
             case R.id.menu_ajustes_forecast: {
                 Intent intentPreferencias = new Intent(this, Settings_Activity.class);
                 startActivity(intentPreferencias);
