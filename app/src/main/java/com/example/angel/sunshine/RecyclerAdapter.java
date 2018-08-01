@@ -121,14 +121,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Previs
 
         //Guarda en el tag del holder el id del resgistro correspondiente para recuperar la informacion de forma sencilla cuando se produzca el evento OnClick sobre la lista
 
-        //holder.itemView.setTag(ind_weater_id);
+        DatosClima datosClima = new DatosClima(date, weatherId, max_temp, min_temp, null, null, null, null, null);
 
-        DatosClima datosClima = new DatosClima(date, weatherId, max_temp, min_temp, null, null, null, null);
+        Boolean mostrarDia = true;
 
-        String resumen = fecha + " - " + descripcion + " - " + min_temp + " a " + max_temp;
+        long datePreviosDay = 0;
 
-        holder.bind(datosClima);
-        // Log.d(TAG, "Elemento " + position + " mostrado");
+        if (position > 0) {
+
+            mCursor.moveToPosition(position - 1);
+            datePreviosDay = mCursor.getLong(ind_date);
+            String fechaPrevia = UtilidadesFecha.timestamp2String(datePreviosDay);
+
+            if (fechaPrevia.equals(fecha)) mostrarDia = false;
+            else mostrarDia = true;
+        }
+
+        holder.bind(datosClima, mostrarDia);
 
     }
 
@@ -145,7 +154,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Previs
         if (date > tsIni && date < tsFin) return VISTA_HOY;
         else return VISTA_FUTURA;*/
 
-        if(position==0) return VISTA_HOY;
+        if (position == 0) return VISTA_HOY;
         else return VISTA_FUTURA;
 
     }
@@ -162,30 +171,36 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Previs
 
         private ImageView iconoClima;
         private TextView diaPronostico;
-        private TextView descripcionClima;
+        //  private TextView descripcionClima;
         private TextView temperaturaMáxima;
         private TextView temperaturaMínima;
+        private TextView hora;
 
         PrevisionItemHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             iconoClima = itemView.findViewById(R.id.ivIconoClima);
             diaPronostico = itemView.findViewById(R.id.tvDiaPronostico);
-            descripcionClima = itemView.findViewById(R.id.tvDescripcionPronóstico);
             temperaturaMáxima = itemView.findViewById(R.id.tvTemperaturaMáxima);
             temperaturaMínima = itemView.findViewById(R.id.tvTemperatuaMínima);
+            hora = itemView.findViewById(R.id.tvHoraClima);
 
 
         }
 
-        public void bind(DatosClima prevision) {
+        public void bind(DatosClima prevision, Boolean mostrarDia) {
 
 
             diaPronostico.setText(prevision.getFecha());
-            descripcionClima.setText(prevision.getDescipcion(mContext));
+            if (mostrarDia) diaPronostico.setVisibility(View.VISIBLE);
+            else diaPronostico.setVisibility(View.GONE);
+
+            //  descripcionClima.setText(prevision.getDescipcion(mContext));
             temperaturaMáxima.setText(prevision.getMaxTempStr(mContext));
             temperaturaMínima.setText(prevision.getMinTempStr(mContext));
             iconoClima.setImageResource(prevision.getIconoClima());
+            hora.setText(prevision.getHour());
+
 
         }
 

@@ -5,26 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/touch_selector_hoy"
     android:orientation="vertical"
     android:paddingTop="0dp"
-    tools:layout_editor_absoluteY="81dp"
-    android:background="@drawable/touch_selector_hoy">
-
-    <TextView
-        android:id="@+id/tvDescripcionPronóstico"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Sol radiante"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintEnd_toEndOf="@+id/ivIconoClima"
-        app:layout_constraintStart_toStartOf="@+id/ivIconoClima"
-        app:layout_constraintTop_toBottomOf="@+id/ivIconoClima"
-        android:textColor="@color/white"/>
+    tools:layout_editor_absoluteY="81dp">
 
     <ImageView
         android:id="@+id/ivIconoClima"
@@ -45,10 +29,30 @@
         android:layout_marginTop="8dp"
         android:text="12 de Diciembre"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/tvHoraClima"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@color/white"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvHoraClima"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:text="08:25 am"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/tvDiaPronostico"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvDiaPronostico"
+        app:layout_constraintTop_toBottomOf="@+id/tvDiaPronostico" />
 
     <TextView
         android:id="@+id/tvTemperaturaMáxima"
@@ -56,9 +60,9 @@
         android:layout_height="wrap_content"
         android:text="25º"
         android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/ivIconoClima"
-        app:layout_constraintStart_toStartOf="@+id/tvTemperatuaMínima"
-        android:textColor="@color/white"/>
+        app:layout_constraintStart_toStartOf="@+id/tvTemperatuaMínima" />
 
     <TextView
         android:id="@+id/tvTemperatuaMínima"
@@ -70,11 +74,11 @@
         android:layout_marginStart="8dp"
         android:text="12º"
         android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintStart_toEndOf="@+id/ivIconoClima"
-        app:layout_constraintTop_toTopOf="@+id/ivIconoClima"
-        android:textColor="@color/white"/>
+        app:layout_constraintTop_toTopOf="@+id/ivIconoClima" />
 
     <View
         android:layout_width="match_parent"
@@ -83,11 +87,10 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:background="#dadada"
         android:paddingTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDescripcionPronóstico" />
+        tools:layout_editor_absoluteY="234dp" />
 
 </android.support.constraint.ConstraintLayout>

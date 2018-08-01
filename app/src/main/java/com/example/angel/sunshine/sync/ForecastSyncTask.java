@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.example.angel.sunshine.R;
 import com.example.angel.sunshine.data.DatosClima;
@@ -25,9 +27,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+
 public class ForecastSyncTask {
 
     Cursor mData;
+    private static final String TAG = ConexionForecast.class.getSimpleName();
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public static void syncPronostico(Context context) {
@@ -75,6 +80,7 @@ public class ForecastSyncTask {
             e.printStackTrace();
 
         } catch (JSONException e) {
+            Log.e(TAG,e.getMessage());
             e.printStackTrace();
         }
 

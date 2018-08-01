@@ -22,8 +22,10 @@ public class OpenWeatherJSON {
 
     private static final String INFORMACION_TIEMPO_OWM = "list";
     private static final String INFORMACION_TEMPERATURA_OWM = "temp";
-    private static final String TEMPERATURA_MINIMA_OWM = "min";
-    private static final String TEMPERATURA_MAXIMA_OWM = "max";
+    private static final String TEMPERATURA_MINIMA_OWM = "temp_min";
+    private static final String TEMPERATURA_MAXIMA_OWM = "temp_max";
+    private static final String ICONO_OWM = "icon";
+
 
 
     private static final String HUMEDAD_OWM = "humidity";
@@ -35,9 +37,12 @@ public class OpenWeatherJSON {
 
     private static final String INFORMACION_CLIMA_OWM = "weather";
     private static final String DESCRIPCION_CLIMA_OWM = "main";
+    private static final String DESCRIPCION_VIENTO_OWM= "wind";
+    private static final String DESCRIPCION_LLUVIA_OWM= "rain";
+
 
     private static final String CODIGO_ESTADO_OWM = "cod";
-
+    private static final String CODIGO_MESSAGE_OWM = "message";
     private static final String LOCALIZACION_FAVORITA = "Peñacastillo, ES";
 
     public static String getLocalizacionFavorita() {
@@ -87,13 +92,16 @@ public class OpenWeatherJSON {
         if (pronosticoJSON.has(CODIGO_ESTADO_OWM)) {
             int errorCode = pronosticoJSON.getInt(CODIGO_ESTADO_OWM);
 
+
             switch (errorCode) {
                 case HttpURLConnection.HTTP_OK:
                     break;
-                case HttpURLConnection.HTTP_NOT_FOUND:
-                    return null;
+
                 default:
-                    return null;
+                    String message = "CODE " + errorCode + ":" +pronosticoJSON.getString(CODIGO_MESSAGE_OWM);
+                    throw new JSONException(message);
+
+
             }
         }
 
@@ -115,28 +123,36 @@ public class OpenWeatherJSON {
     public static DatosClima obtenerDatosClimaDia(JSONObject jsonObject) throws JSONException {
 
 
-        JSONObject temperaturaDia = jsonObject.getJSONObject(INFORMACION_TEMPERATURA_OWM);
-        JSONObject climaDia = jsonObject.getJSONArray(INFORMACION_CLIMA_OWM).getJSONObject(0);
+      //  JSONObject temperaturaDia = jsonObject.getJSONObject(INFORMACION_TEMPERATURA_OWM);
+        JSONObject wheater = jsonObject.getJSONArray(INFORMACION_CLIMA_OWM).getJSONObject(0);
+        JSONObject main = jsonObject.getJSONObject(DESCRIPCION_CLIMA_OWM);
+        JSONObject wind = jsonObject.getJSONObject(DESCRIPCION_VIENTO_OWM);
+        JSONObject rain = jsonObject.getJSONObject(DESCRIPCION_LLUVIA_OWM);
+
+
 
         //c pasar timestamp a local.
         //c verificar que la conversion de timestamp es correcta
 
         Long timestamp = jsonObject.getLong(TIMESTAMP);
-
         timestamp = UtilidadesFecha.convertUTC2LocalTimeZone(timestamp);
-        Integer prevision_id = climaDia.getInt(ID_WEATHER_OWM);
-        Double maxTemp = temperaturaDia.getDouble(TEMPERATURA_MAXIMA_OWM);
 
-        Double minTemp = temperaturaDia.getDouble(TEMPERATURA_MINIMA_OWM);
-
-        Double humedad = jsonObject.getDouble(HUMEDAD_OWM);
-        Double presion = jsonObject.getDouble(PRESION_OWM);
-
-        Double viento = jsonObject.getDouble(VIENTO_OWM);
-        Double orientacionViento = jsonObject.getDouble(DIRECCION_VIENTO_OWM);
+        Integer prevision_id = wheater.getInt(ID_WEATHER_OWM);
 
 
-        return new DatosClima(timestamp, prevision_id, maxTemp, minTemp, humedad, presion, viento, orientacionViento);
+        Double maxTemp = main.getDouble(TEMPERATURA_MAXIMA_OWM);
+        Double minTemp =  main.getDouble(TEMPERATURA_MINIMA_OWM);
+
+        Double humedad = main.getDouble(HUMEDAD_OWM);
+        Double presion = main.getDouble(PRESION_OWM);
+
+        Double viento = wind.getDouble(VIENTO_OWM);
+        Double orientacionViento = wind.getDouble(DIRECCION_VIENTO_OWM);
+
+
+        String icon= wheater.getString(ICONO_OWM);
+        return new DatosClima(timestamp, prevision_id, maxTemp, minTemp, humedad, presion, viento, orientacionViento, icon);
+
     }
 
 }

@@ -2,87 +2,84 @@
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/touch_selector"
     android:orientation="vertical"
     android:paddingLeft="@dimen/forecast_detail_vertical_padding"
     android:paddingRight="@dimen/forecast_detail_vertical_padding"
-    android:paddingTop="@dimen/list_item_padding_vertical"
-    android:background="@drawable/touch_selector">
-
-    <TextView
-        android:id="@+id/tvDescripcionPronóstico"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Sol radiante"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintStart_toStartOf="@+id/tvDiaPronostico"
-        app:layout_constraintTop_toBottomOf="@+id/tvDiaPronostico" />
+    android:paddingTop="@dimen/list_item_padding_vertical">
 
     <ImageView
         android:id="@+id/ivIconoClima"
         android:layout_width="@dimen/list_icon"
         android:layout_height="@dimen/list_icon"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
+        app:layout_constraintStart_toEndOf="@+id/tvHoraClima"
+        app:layout_constraintTop_toBottomOf="@+id/tvDiaPronostico"
         app:srcCompat="@drawable/art_clear" />
 
     <TextView
         android:id="@+id/tvDiaPronostico"
-        android:layout_width="145dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="@dimen/list_item_icon_margin_right"
-        android:layout_marginTop="12dp"
+        android:background="@android:color/holo_green_light"
+        android:gravity="center"
         android:text="12 de Diciembre"
+        android:textAllCaps="false"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
+        android:textColor="@color/white"
+        android:textStyle="bold|italic"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        app:layout_constraintStart_toEndOf="@+id/ivIconoClima"
-        app:layout_constraintTop_toTopOf="@+id/ivIconoClima" />
+    <TextView
+        android:id="@+id/tvHoraClima"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="08:25 am"
+        app:layout_constraintBottom_toTopOf="@+id/ivIconoClima"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivIconoClima" />
 
     <TextView
         android:id="@+id/tvTemperaturaMáxima"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/list_item_high_temperature_margin"
-        android:layout_marginRight="@dimen/list_item_high_temperature_margin"
+        android:layout_marginEnd="28dp"
+        android:layout_marginRight="28dp"
         android:text="25º"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tvTemperatuaMínima"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/primary_text"
 
-        android:textColor="@color/primary_text"/>
+        app:layout_constraintBottom_toTopOf="@+id/ivIconoClima"
+        app:layout_constraintEnd_toStartOf="@+id/tvTemperatuaMínima"
+        app:layout_constraintTop_toBottomOf="@+id/ivIconoClima" />
 
     <TextView
         android:id="@+id/tvTemperatuaMínima"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
         android:text="12º"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/secondary_text"
+        app:layout_constraintBottom_toTopOf="@+id/tvTemperaturaMáxima"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@color/secondary_text"/>
+        app:layout_constraintTop_toBottomOf="@+id/tvTemperaturaMáxima" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
         android:background="#dadada"
         android:paddingTop="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivIconoClima" />
+        tools:layout_editor_absoluteX="16dp" />
 
 </android.support.constraint.ConstraintLayout>

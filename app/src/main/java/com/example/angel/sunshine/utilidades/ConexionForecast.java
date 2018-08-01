@@ -3,6 +3,7 @@ package com.example.angel.sunshine.utilidades;
 
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -18,8 +19,10 @@ import okhttp3.Response;
 
 public class ConexionForecast {
 
+    private  static final String API_KEY="4c5b37cc37318fb93f86c864768e588a";
+    private static final String DAILY_WEATHER_URL= "https://api.openweathermap.org/data/2.5/forecast/daily"; //Disponible bajo pago
+    private static final String FIVE_DAYS_3H_WEATHER_URL= "https://api.openweathermap.org/data/2.5/forecast/";
 
-    private static final String TAG = ConexionForecast.class.getSimpleName();
 
     private static final String DYNAMIC_WEATHER_URL =
             "https://andfun-weather.udacity.com/weather";
@@ -27,15 +30,17 @@ public class ConexionForecast {
     private static final String STATIC_WEATHER_URL =
             "https://andfun-weather.udacity.com/staticweather";
 
-    private static final String FORECAST_BASE_URL = STATIC_WEATHER_URL;
+
+    private static final String FORECAST_BASE_URL = FIVE_DAYS_3H_WEATHER_URL;
+
+
+    private static final String TAG = ConexionForecast.class.getSimpleName();
 
     /*
 
     /* The format we want our API to return */
     private static final String format = "json";
     /* The units we want our API to return */
-    private static final String units = "metric";
-    /* The number of days we want our API to return */
     private static final int numeroDias = 14;
 
     private final static String QUERY_PARAM = "q";
@@ -44,6 +49,7 @@ public class ConexionForecast {
     private final static String FORMAT_PARAM = "mode";
     private final static String UNITS_PARAM = "units";
     private final static String DAYS_PARAM = "cnt";
+    private final static String API_PARAM = "appid";
 
 
     public static URL construyeUrl(String localizacion, String unidadTemperatura) {
@@ -52,7 +58,9 @@ public class ConexionForecast {
         builder.appendQueryParameter(QUERY_PARAM, localizacion);
         builder.appendQueryParameter(FORMAT_PARAM, format);
         builder.appendQueryParameter(UNITS_PARAM, unidadTemperatura);
-        builder.appendQueryParameter(DAYS_PARAM, Integer.toString(numeroDias));
+  //      builder.appendQueryParameter(DAYS_PARAM, Integer.toString(numeroDias));
+      builder.appendQueryParameter(API_PARAM, API_KEY);
+
         builder.build();
 
         try {
@@ -75,9 +83,12 @@ public class ConexionForecast {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
+       Response response = client.newCall(request).execute();
+    return response.body().string();
 
-        Response response = client.newCall(request).execute();
-        return response.body().string();
+
+
+
     }
 
 }

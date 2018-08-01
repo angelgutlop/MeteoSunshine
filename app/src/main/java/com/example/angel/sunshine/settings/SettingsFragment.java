@@ -9,7 +9,6 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 
 import com.example.angel.sunshine.R;
-import com.example.angel.sunshine.data.PronosticoContract;
 import com.example.angel.sunshine.sync.ForecastSyncUtilis;
 import com.example.angel.sunshine.utilidades.PreferenciasApp;
 
@@ -47,7 +46,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             ForecastSyncUtilis.sincronizarInmediatamente(activity);
             setEditTextSummary(key);
         } else if (key.equals(getString(R.string.ajustes_seleccion_temperatura_key))) {
-            activity.getContentResolver().notifyChange(PronosticoContract.PronosticoAcceso.CONTENT_URI, null);
+            ForecastSyncUtilis.sincronizarInmediatamente(activity);
+
+//            activity.getContentResolver().notifyChange(PronosticoContract.PronosticoAcceso.CONTENT_URI, null);
             setListPreferenceSummary(key);
         }
     }

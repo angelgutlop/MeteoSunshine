@@ -8,8 +8,8 @@
     <string name="centigrados_label">Grados centígrados (ºC)</string>
     <string name="farenheit_label">Grados fahrenheit (ºF)</string>
 
-    <string name="centigrados_value">Celsius</string>
-    <string name="farenheit_value">Fahrenheit</string>
+    <string name="centigrados_value">metric</string>
+    <string name="farenheit_value">imperial</string>
 
 
     <string name="ajustes_seleccion_temperatura_key">seleccion_temperatura_key</string>

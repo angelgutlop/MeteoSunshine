@@ -17,18 +17,35 @@ public class UtilidadesFecha {
 
     private String TAG = UtilidadesFecha.class.getSimpleName();
 
-    public static String timestamp2String(long timestamp) {
+    public static Boolean compareDateDays(Long timestampDate1, Long timestampDate2) {
+        SimpleDateFormat sfd = new SimpleDateFormat("yyyyMMdd", new Locale("es", "ES"));
+
+        Date date1 = new Date(TimeUnit.SECONDS.toMillis(timestampDate1));
+        Date date2 = new Date(TimeUnit.SECONDS.toMillis(timestampDate2));
+
+        String dateStr1 = sfd.format(date1);
+        String dateStr2 = sfd.format(date2);
+
+        if (dateStr1.equals(dateStr2)) return true;
+        else return false;
+    }
+
+    public static String timestamp2StringHour(long timestamp) {
 
         Long timestamp_milis = TimeUnit.SECONDS.toMillis(timestamp);
+        Date dt = new Date(timestamp_milis);
 
+        SimpleDateFormat sfd = new SimpleDateFormat("hh:mm a", new Locale("es", "ES"));
+        return sfd.format(dt);
+    }
+
+    public static String timestamp2String(Long timestamp) {
+
+        Long timestamp_milis = TimeUnit.SECONDS.toMillis(timestamp);
         Date dt = new Date(timestamp_milis);
 
         SimpleDateFormat sfd = new SimpleDateFormat("E d MMMM", new Locale("es", "ES"));
-
-        String fecha = sfd.format(dt);
-
-
-        return fecha;
+        return sfd.format(dt);
     }
 
     //todo comprobar que estas dos funciones devuelven la fecha correcta
@@ -116,4 +133,5 @@ public class UtilidadesFecha {
         return timestamp.getTime();
 
     }
+
 }

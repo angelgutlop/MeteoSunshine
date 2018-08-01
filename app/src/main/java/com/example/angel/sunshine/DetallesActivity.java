@@ -48,8 +48,6 @@ public class DetallesActivity extends AppCompatActivity implements LoaderManager
         }
 
 
-
-
         Uri uriDate = null;
         Intent intent = getIntent();
         if (intent.hasExtra(Intent.EXTRA_TEXT)) {
