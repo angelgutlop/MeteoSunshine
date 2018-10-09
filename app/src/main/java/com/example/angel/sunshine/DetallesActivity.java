@@ -23,12 +23,12 @@ import com.example.angel.sunshine.utilidades.UtilidadesFecha;
 import com.example.angel.sunshine.utilidades.UtilidadesTiempo;
 
 public class DetallesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-
+private String pevisión_texto;
     //TextView tvPrevision;
     //Deta mainBinding;
     //Activity mainBinding;
 
-    private ActivitdadDetallesBinding mdetallesBinding;
+    private ActivitdadDetallesBinding mdetallesBinding=null;
 
     private enum ID_LOADERS {FETCH_WEATHER_ENTRY}
 
@@ -36,9 +36,9 @@ public class DetallesActivity extends AppCompatActivity implements LoaderManager
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+      //  setContentView(R.layout.activitdad_detalles);
 
-
-        mdetallesBinding = DataBindingUtil.setContentView(this, R.layout.activitdad_detalles);
+        if(mdetallesBinding==null) mdetallesBinding = DataBindingUtil.setContentView(this, R.layout.activitdad_detalles);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         try {
@@ -103,17 +103,17 @@ public class DetallesActivity extends AppCompatActivity implements LoaderManager
         switch (id) {
             case R.id.accion_compartir_detalles: {
 
-                // c String texto = tvPrevision.getText().toString();
+
                 String mimeType = "text/Plain";
                 ShareCompat.IntentBuilder shareIntent = ShareCompat.IntentBuilder.from(this);
                 shareIntent.setChooserTitle("Compartir mediante");
-                // c shareIntent.setType(mimeType).setText(texto);
+               shareIntent.setType(mimeType).setText(pevisión_texto);
 
                 Intent intent = shareIntent.getIntent();
 
-                if (intent.resolveActivity(getPackageManager()) != null) {
+               if (intent.resolveActivity(getPackageManager()) != null) {
                     startActivity(intent);
-                }
+               }
 
                 break;
             }
@@ -208,10 +208,12 @@ public class DetallesActivity extends AppCompatActivity implements LoaderManager
 
 
         String vientoStr = UtilidadesTiempo.getFormattedWind(this, velocidadViento, orientacionViento);
+String fechaConHora=UtilidadesFecha.timestamp2FullDateString(fecha);
+        String descripcion=UtilidadesTiempo.getWeatherIdString(this, weatherId);
 
         mdetallesBinding.detallesPrincipal.iconoClima.setImageResource(UtilidadesTiempo.getIDIconoVectorClimaLargo((weatherId)));
-        mdetallesBinding.detallesPrincipal.tvFechaDetalles.setText(UtilidadesFecha.timestamp2String(fecha));
-        mdetallesBinding.detallesPrincipal.tvDescripcionDetalles.setText(UtilidadesTiempo.getWeatherIdString(this, weatherId));
+        mdetallesBinding.detallesPrincipal.tvFechaDetalles.setText(fechaConHora);
+        mdetallesBinding.detallesPrincipal.tvDescripcionDetalles.setText(descripcion);
 
         String maxtempStr = Long.toString(data.getLong(idColumnaTemperatura_max)) + "º";
         String mintempStr = Long.toString(data.getLong(idColumnaTemperatura_min)) + "º";
@@ -224,6 +226,12 @@ public class DetallesActivity extends AppCompatActivity implements LoaderManager
 
         mdetallesBinding.detallesExtra.tvPresionDetalles.setText(presionStr);
         mdetallesBinding.detallesExtra.tvVientoDetalles.setText(vientoStr);
+
+        pevisión_texto = fechaConHora + " - Pronóstico "+descripcion.toUpperCase() +
+                "\n Temperatura máxima:  " + maxtempStr +
+                "\n Temperatura mínima:  " + mintempStr +
+                "\n Humedad:  " + humedadStr +
+                "\n Presión:  " + presionStr;
 
 
     }

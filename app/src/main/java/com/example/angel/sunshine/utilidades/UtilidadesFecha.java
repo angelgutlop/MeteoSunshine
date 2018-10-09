@@ -48,6 +48,16 @@ public class UtilidadesFecha {
         return sfd.format(dt);
     }
 
+
+    public static String timestamp2FullDateString(Long timestamp) {
+
+        Long timestamp_milis = TimeUnit.SECONDS.toMillis(timestamp);
+        Date dt = new Date(timestamp_milis);
+
+        SimpleDateFormat sfd = new SimpleDateFormat("E d MMMM - HH:mm", new Locale("es", "ES"));
+        return sfd.format(dt);
+    }
+
     //todo comprobar que estas dos funciones devuelven la fecha correcta
 
 

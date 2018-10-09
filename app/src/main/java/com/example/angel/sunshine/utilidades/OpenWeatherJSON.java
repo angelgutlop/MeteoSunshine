@@ -127,7 +127,7 @@ public class OpenWeatherJSON {
         JSONObject wheater = jsonObject.getJSONArray(INFORMACION_CLIMA_OWM).getJSONObject(0);
         JSONObject main = jsonObject.getJSONObject(DESCRIPCION_CLIMA_OWM);
         JSONObject wind = jsonObject.getJSONObject(DESCRIPCION_VIENTO_OWM);
-        JSONObject rain = jsonObject.getJSONObject(DESCRIPCION_LLUVIA_OWM);
+     //   JSONObject rain = jsonObject.getJSONObject(DESCRIPCION_LLUVIA_OWM);
 
 
 
